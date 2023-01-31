@@ -9,6 +9,12 @@ DEPS = deps/interface-dialogue
 
 all: ${EXECUTABLE}
 
+clean: 
+	rm ${EXECUTABLE} ${OBJECTS}
+
+run: ${EXECUTABLE}
+	${EXECUTABLE}
+
 ${EXECUTABLE}: ${OBJECTS}
 	${CXX} $^ -o $@
 
