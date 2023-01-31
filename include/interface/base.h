@@ -1,10 +1,12 @@
 #ifndef BASE_INTERFACE_H
 #define BASE_INTERFACE_H
 
-class interface{
+class game;
 
-	virtual void update();
-	virtual void draw();
+struct interface{
+	game* Game;
+	virtual void update()=0;
+	virtual void draw()=0;
 };
 
 #endif
