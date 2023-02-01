@@ -2,8 +2,9 @@ EXECUTABLE = bin/rpg
 SOURCES = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJECTS = $(SOURCES:src/%.cpp=obj/%.o)
 
-INCLUDE_DIR = include
 DEPS = deps/interface-dialogue
+INCLUDES = -Iinclude $(shell pkg-config sdl2 --cflags) 
+LIBS = $(shell pkg-config sdl2 --libs)
 
 .PHONY = all clean run
 
@@ -16,7 +17,7 @@ run: ${EXECUTABLE}
 	${EXECUTABLE}
 
 ${EXECUTABLE}: ${OBJECTS}
-	${CXX} $^ -o $@
+	${CXX} $^ -o $@ ${LIBS}
 
 ./obj/%.o: src/%.cpp $(wildcard include/%.h)
-	${CXX} $< -c -o $@ -I"${INCLUDE_DIR}"
+	${CXX} $< -c -o $@ ${INCLUDES}
