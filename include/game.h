@@ -4,6 +4,7 @@
 #include <list>
 
 #include "interface/mainmenu.h"
+#include "interface/inputbox.h"
 #include "character.h"
 
 class game{
@@ -11,16 +12,19 @@ class game{
 	character party[4];
 
 	mainmenu MainMenu;
-	//worldmap WorldMap;
-
+	inputbox InputBox;
 	std::list<interface*> active_interfaces;
 
 public:
 	game();
 	~game();
 
+	bool game_loop;
+
 	void init();
 	void load_MainMenu();
+	void load_InputBox(callbackFn callback);
+	void load_Return();
 	void run();
 };
 
