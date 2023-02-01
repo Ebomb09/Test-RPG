@@ -3,29 +3,35 @@
 
 #include <list>
 
+#include "video.h"
+#include "input.h"
+
 #include "interface/mainmenu.h"
 #include "interface/inputbox.h"
+
 #include "character.h"
 
-class game{
+class game : public input, public video{
 
-	character party[4];
+	bool game_loop;
 
 	mainmenu MainMenu;
 	inputbox InputBox;
 	std::list<interface*> active_interfaces;
 
+	void init();
+
 public:
 	game();
 	~game();
 
-	bool game_loop;
+	character Party[4];
 
-	void init();
 	void load_MainMenu();
 	void load_InputBox(callbackFn callback);
 	void load_Return();
 	void run();
+	void stop();
 };
 
 #endif

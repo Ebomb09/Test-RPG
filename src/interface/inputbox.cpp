@@ -10,8 +10,7 @@ inputbox::inputbox(){
 void inputbox::update(){
 
 	std::cout << "Input a string! ";
-	std::cin >> output;
-
+	output = "TEST STRING";
 	Game->load_Return();
 }
 

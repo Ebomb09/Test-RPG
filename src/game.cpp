@@ -13,6 +13,11 @@ game::~game(){
 void game::init(){
 	MainMenu.Game = this;
 	InputBox.Game = this;
+
+	video::init();
+	video::create_Window("RPG Test", 640, 480);
+
+	input::init();
 }
 
 void game::load_Return(){
@@ -43,12 +48,26 @@ void game::run(){
 
 	while(game_loop){
 
+		// Check if there are any inputs
+		input::poll();
+
+		if(quit)
+			stop();
+
 		// Only update logic for the top most interface
 		if(!active_interfaces.empty())
 			active_interfaces.front()->update();
 
 		// Draw from bottom to top
+		video::clear_Buffer(255, 255, 255, 255);
+
 		for(std::list<interface*>::reverse_iterator it = active_interfaces.rbegin(); it != active_interfaces.rend(); it ++)
 			(*it)->draw();
+
+		video::swap_Buffer();
 	}
+}
+
+void game::stop(){
+	game_loop = false;
 }
