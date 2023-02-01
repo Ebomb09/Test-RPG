@@ -1,19 +1,23 @@
 #ifndef GAME_PAGE_H
 #define GAME_PAGE_H
 
-#include <tuple>
+#include <cstddef>
 
 template <class T, class Tid, int size>
 struct page{
 
-	std::tuple<T, Tid, int> elements[size];
+	struct{
+		T val;
+		Tid id;
+		int access;
+	}elements[size];
 
 	page(){
 
 		for(int i = 0; i < size; i ++){
-			std::get<0>(elements[i]) = NULL;
-			std::get<1>(elements[i]) = Tid{};
-			std::get<2>(elements[i]) = 0;
+			elements[i].val = NULL;
+			elements[i].id = Tid{};
+			elements[i].access = 0;
 		}
 	}
 
@@ -21,12 +25,11 @@ struct page{
 
 		for(int i = 0; i < size; i ++){
 
-			if(std::get<1>(elements[i]) == id){
-				std::get<2>(elements[i]) ++;
-				return std::get<0>(elements[i]);
+			if(elements[i].id == id){
+				elements[i].access ++;
+				return elements[i].val;
 			}
 		}
-
 		return NULL;
 	}
 
@@ -35,18 +38,25 @@ struct page{
 
 		for(int i = 0; i < size; i ++){
 
-			if(std::get<2>(elements[i]) < std::get<2>(elements[i])){
+			if(elements[i].access < elements[i].access){
 				smallest = i;
 			}
 		}
 
-		T old = std::get<0>(elements[smallest]);
-		std::get<0>(elements[smallest]) = next;
-		std::get<1>(elements[smallest]) = id;
-		std::get<2>(elements[smallest]) = 0;
+		T old = elements[smallest].val;
+		elements[smallest].val = next;
+		elements[smallest].id = id;
+		elements[smallest].access = 0;
 		return old;
 	}
 
+	int count(){
+		return size;
+	}
+
+	T operator[](const int index){
+		return elements[index].val;
+	}
 };
 
 #endif

@@ -1,7 +1,15 @@
 #include "video.h"
+#include "SDL_render.h"
+#include "SDL_surface.h"
 #include <iostream>
 
 video::~video(){
+
+	for(int i = 0; i < textures.count(); i ++)
+		SDL_DestroyTexture(textures[i]);
+	
+	for(int i = 0; i < fonts.count(); i ++)
+		TTF_CloseFont(fonts[i]);
 
 	if(Window)
 		SDL_DestroyWindow(Window);
@@ -63,13 +71,15 @@ SDL_Texture* video::load_Texture(std::string filename){
 
 TTF_Font* video::load_Font(std::string filename, int ptsize){
 
-	TTF_Font* font = fonts.find(filename);
+	std::string id_name = filename + ":" + std::to_string(ptsize);
+
+	TTF_Font* font = fonts.find(id_name);
 
 	if(!font){
 		font = TTF_OpenFont(filename.c_str(), ptsize);
 
 		if(font){
-			TTF_Font* old = fonts.replace(font, filename);
+			TTF_Font* old = fonts.replace(font, id_name);
 			TTF_CloseFont(old);
 		}
 	}
@@ -82,9 +92,32 @@ bool video::draw_Line(int x1, int y1, int x2, int y2){
 	return (SDL_RenderDrawLine(Renderer, x1, y1, x2, y2) == 0);
 }
 
-bool video::draw_Text(std::string text, int x, int y, std::string font){
+bool video::draw_Text(int x, int y, std::string text, std::string fontname, int ptsize){
 
-	//return SDL_RenderCopy(Renderer, )
+	std::string id_name = text + ":" + fontname + ":" + std::to_string(ptsize);
+
+	TTF_Font* font = load_Font(fontname, ptsize);
+	SDL_Texture* tex = load_Texture(id_name);
+
+	if(!tex){
+		SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), {0, 0, 0, 255});
+		tex = SDL_CreateTextureFromSurface(Renderer, surface);
+		SDL_FreeSurface(surface);
+
+		if(tex){
+			SDL_Texture* old = textures.replace(tex, id_name);
+			SDL_DestroyTexture(old);
+		}
+	}
+
+	int w, h;
+	SDL_QueryTexture(tex, NULL, NULL, &w, &h);
+
+	SDL_Rect src = {0, 0, w, h};
+	SDL_Rect dst = {x, y, w, h};
+
+	SDL_RenderCopy(Renderer, tex, &src, &dst);
+
 	return true;
 }
 
