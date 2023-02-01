@@ -3,8 +3,8 @@ SOURCES = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJECTS = $(SOURCES:src/%.cpp=obj/%.o)
 
 DEPS = deps/interface-dialogue
-INCLUDES = -Iinclude $(shell pkg-config sdl2 --cflags) 
-LIBS = $(shell pkg-config sdl2 --libs)
+INCLUDES = -Iinclude $(shell pkg-config sdl2 SDL2_ttf SDL2_image --cflags) 
+LIBS = $(shell pkg-config SDL2_ttf SDL2_image --libs)
 
 .PHONY = all clean run
 
