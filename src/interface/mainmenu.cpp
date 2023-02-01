@@ -18,6 +18,8 @@ void mainmenu::draw(){
 
 	Game->draw_Texture(32, 32, "test.bmp");
 	Game->draw_Texture(128, 32, "test2.bmp");
+
+	Game->draw_Text(320, 240, "Hello World!", "DotGothic16-Regular.ttf", 26);
 }
 
 void mainmenu::get_string(interface* it, void* args[]){
