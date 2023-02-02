@@ -1,4 +1,5 @@
-EXECUTABLE = bin/rpg
+GAME_NAME = rpg
+EXECUTABLE = bin/${GAME_NAME}
 SOURCES = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJECTS = $(SOURCES:src/%.cpp=obj/%.o)
 
