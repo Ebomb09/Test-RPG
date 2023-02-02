@@ -1,7 +1,12 @@
 #include "input.h"
+#include "SDL_keycode.h"
+#include "SDL_scancode.h"
+#include <cctype>
+#include <iostream>
 
 input::input(){
 	quit = false;
+	reset_string();
 }
 
 input::~input(){
@@ -19,6 +24,36 @@ void input::refresh(std::map<const int, bool>& map){
 	}
 }
 
+char translate(char c){
+	c = std::toupper(c);
+std::cout << "TEST";
+	switch(c){
+		case '`': c = '~'; break;
+		case '1': c = '!'; break;
+		case '2': c = '@'; break;
+		case '3': c = '#'; break;
+		case '4': c = '$'; break;
+		case '5': c = '%'; break;
+		case '6': c = '^'; break;
+		case '7': c = '&'; break;
+		case '8': c = '*'; break;
+		case '9': c = '('; break;
+		case '0': c = ')'; break;
+		case '-': c = '_'; break;
+		case '=': c = '+'; break;
+		case '[': c = '{'; break;
+		case ']': c = '}'; break;
+		case '\\': c = '|'; break;
+		case ';': c = ':'; break;
+		case '\'': c = '"'; break;
+		case ',': c = '<'; break;
+		case '.': c = '>'; break;
+		case '/': c = '?'; break;
+	}
+
+	return c;
+}
+
 void input::poll(){
 
 	SDL_Event event;
@@ -34,6 +69,21 @@ void input::poll(){
 		if(event.type == SDL_KEYDOWN){
 			Pressed[event.key.keysym.scancode] = true;
 			Held[event.key.keysym.scancode] = true;
+
+			// Input string control
+			if(event.key.keysym.sym == SDLK_BACKSPACE)
+				input_string = input_string.substr(0, input_string.size() - 1);
+
+			if(event.key.keysym.sym == SDLK_SPACE)
+				input_string += ' ';
+
+			if(std::isalpha(event.key.keysym.sym) || std::isgraph(event.key.keysym.sym)){
+
+				if(event.key.keysym.mod & KMOD_SHIFT)
+					input_string += translate(event.key.keysym.sym);
+				else
+					input_string += event.key.keysym.sym;
+			}
 		}
 		
 		if(event.type == SDL_KEYUP){
@@ -65,4 +115,16 @@ int input::mouse_PositionY(){
 	int my;
 	SDL_GetMouseState(NULL, &my);
 	return my;
+}
+
+void input::reset_string(){
+	input_string = "";
+}
+
+std::string input::get_string(){
+	return input_string;
+}
+
+void input::set_string(std::string set){
+	input_string = set;
 }

@@ -1,6 +1,7 @@
 #ifndef INPUT_GAME_H
 #define INPUT_GAME_H
 
+#include <string>
 #include <map>
 #include "SDL2/SDL.h"
 
@@ -12,6 +13,8 @@ protected:
 	std::map<const int, bool> Pressed;
 	std::map<const int, bool> Released;
 	std::map<const int, bool> Held;
+
+	std::string input_string;
 
 	bool init();
 	void poll();
@@ -27,6 +30,10 @@ public:
 
 	int mouse_PositionX();
 	int mouse_PositionY(); 
+
+	void reset_string();
+	std::string get_string();
+	void set_string(std::string set);
 };
 
 #endif
