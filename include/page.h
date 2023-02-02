@@ -1,7 +1,7 @@
 #ifndef GAME_PAGE_H
 #define GAME_PAGE_H
 
-#include <cstddef>
+#include <ctime>
 
 template <class T, class Tid, int size>
 struct page{
@@ -9,7 +9,7 @@ struct page{
 	struct{
 		T val;
 		Tid id;
-		int access;
+		time_t access;
 	}elements[size];
 
 	page(){
@@ -38,7 +38,7 @@ struct page{
 
 		for(int i = 0; i < size; i ++){
 
-			if(elements[i].access < elements[i].access){
+			if(elements[smallest].access > elements[i].access){
 				smallest = i;
 			}
 		}
@@ -46,7 +46,7 @@ struct page{
 		T old = elements[smallest].val;
 		elements[smallest].val = next;
 		elements[smallest].id = id;
-		elements[smallest].access = 0;
+		time(&elements[smallest].access);
 		return old;
 	}
 
