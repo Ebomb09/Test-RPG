@@ -1,8 +1,11 @@
+#include <chrono>
+#include <thread>
 #include <iostream>
 #include "game.h"
 
 game::game(){
 	game_loop = true;
+	frames_per_second = 60.;
 	init();
 }
 
@@ -46,7 +49,15 @@ void game::load_InputBox(callbackFn callback){
 
 void game::run(){
 
+	using clock = std::chrono::high_resolution_clock;
+	using time_t = clock::time_point;
+	using duration_t = std::chrono::duration<double, std::milli>;
+
 	while(game_loop){
+
+		// Get start time of the execution loop
+		double seconds_per_frame = 1 / frames_per_second;
+		time_t time_start = clock::now();
 
 		// Check if there are any inputs
 		input::poll();
@@ -65,6 +76,16 @@ void game::run(){
 			(*it)->draw();
 
 		video::swap_Buffer();
+
+		// Calculate delta time and sleep if needed
+		// to achieve the desired FPS
+		time_t time_end = clock::now();
+		duration_t duration = std::chrono::duration_cast<duration_t>(time_end - time_start);
+
+		if(duration.count() < seconds_per_frame * 1000.){
+			double diff = seconds_per_frame * 1000. - duration.count();
+			std::this_thread::sleep_for(duration_t(diff));
+		}
 	}
 }
 

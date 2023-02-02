@@ -14,6 +14,7 @@
 class game : public input, public video{
 
 	bool game_loop;
+	double frames_per_second;
 
 	mainmenu MainMenu;
 	inputbox InputBox;
