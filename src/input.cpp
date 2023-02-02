@@ -26,7 +26,7 @@ void input::refresh(std::map<const int, bool>& map){
 
 char translate(char c){
 	c = std::toupper(c);
-std::cout << "TEST";
+
 	switch(c){
 		case '`': c = '~'; break;
 		case '1': c = '!'; break;
