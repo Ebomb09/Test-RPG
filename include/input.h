@@ -24,6 +24,9 @@ public:
 	bool key_Pressed(int key);
 	bool key_Released(int key);
 	bool key_Held(int key);
+
+	int mouse_PositionX();
+	int mouse_PositionY(); 
 };
 
 #endif

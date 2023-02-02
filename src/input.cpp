@@ -54,3 +54,15 @@ bool input::key_Released(int key){
 bool input::key_Held(int key){
 	return Held[key];
 }
+
+int input::mouse_PositionX(){
+	int mx;
+	SDL_GetMouseState(&mx, NULL);
+	return mx;
+}
+
+int input::mouse_PositionY(){
+	int my;
+	SDL_GetMouseState(NULL, &my);
+	return my;
+}
