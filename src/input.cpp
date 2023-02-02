@@ -77,7 +77,7 @@ void input::poll(){
 			if(event.key.keysym.sym == SDLK_SPACE)
 				input_string += ' ';
 
-			if(std::isalpha(event.key.keysym.sym) || std::isgraph(event.key.keysym.sym)){
+			if(event.key.keysym.sym >= ' ' && event.key.keysym.sym <= '~'){
 
 				if(event.key.keysym.mod & KMOD_SHIFT)
 					input_string += translate(event.key.keysym.sym);
