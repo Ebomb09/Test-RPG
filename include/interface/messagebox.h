@@ -4,7 +4,7 @@
 #include "dialogue.h"
 #include "interface/base.h"
 
-struct messagebox : interface, handler{
+struct messagebox : interface, dialogue::handler{
 
 	void update();
 	void draw();
