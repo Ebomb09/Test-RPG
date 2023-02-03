@@ -11,7 +11,7 @@ OBJECTS = $(SOURCES:src/%.cpp=obj/%.o)
 DEPS = deps/interface-dialogue
 INCLUDES = -Iinclude $(shell pkg-config sdl2 SDL2_ttf SDL2_image --cflags) -I$(DEPS:=/include)
 LIBS = $(shell pkg-config sdl2 SDL2_ttf SDL2_image --libs) -L$(DEPS:=/lib) -ldialogue
-CPPFLAGS := -std=c++11
+CPPFLAGS := -std=c++14
 
 .PHONY = all clean run init
 
