@@ -26,7 +26,7 @@ clean:
 	rm ${EXECUTABLE} ${OBJECTS}
 
 run: ${EXECUTABLE}
-	cd bin && ${EXECUTABLE}
+	cd $(dir ${EXECUTABLE}) && ./$(notdir ${EXECUTABLE})
 
 ${EXECUTABLE}: ${OBJECTS}
 	${CXX} $^ -o $@ ${LIBS} ${CFLAGS} ${CPPFLAGS}
