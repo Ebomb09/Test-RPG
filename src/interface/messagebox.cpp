@@ -31,15 +31,15 @@ void messagebox::draw(){
 	switch(current()){
 
 		case Dialogue: {
-			Game->draw_Text(0, 240, getSpeaker(), "DotGothic16-Regular.ttf", 26);
-			Game->draw_Text(0, 266, getText(), "DotGothic16-Regular.ttf", 16);
+			Game->draw_TextClip(0, 240, 640, 26, getSpeaker(), "DotGothic16-Regular.ttf", 48);
+			Game->draw_TextClip(0, 288, 640, 480-288, getText(), "DotGothic16-Regular.ttf", 36);
 			break;
 		}
 
 		case Option: {
 
 			for(int i = 0; i < getOptionCount(); i ++){
-				Game->draw_Text(0, 240+16*i, std::to_string(i) + ". " + getOptionText(i), "DotGothic16-Regular.ttf", 16);
+				Game->draw_TextClip(0, 240+16*i, 640, 16, std::to_string(i) + ". " + getOptionText(i), "DotGothic16-Regular.ttf", 16);
 			}
 		}
 	}
