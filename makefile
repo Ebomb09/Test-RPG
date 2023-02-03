@@ -1,5 +1,10 @@
 GAME_NAME = rpg
 EXECUTABLE = bin/${GAME_NAME}
+
+ifeq (${OS},Windows_NT)
+	EXECUTABLE := ${EXECUTABLE}.exe
+endif
+
 SOURCES = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJECTS = $(SOURCES:src/%.cpp=obj/%.o)
 
