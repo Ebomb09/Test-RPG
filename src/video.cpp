@@ -121,6 +121,35 @@ bool video::draw_Text(int x, int y, std::string text, std::string fontname, int 
 	return true;
 }
 
+bool video::draw_TextClip(int x, int y, int clip_w, int clip_h, std::string text, std::string fontname, int ptsize){
+
+	TTF_Font* font = load_Font(fontname, ptsize);
+
+	int count, start;
+	int h = 0;
+	while(text != "" && h < clip_h){
+		TTF_MeasureText(font, text.c_str(), clip_w, NULL, &count);
+
+		for(int i = count-1; i >= 0; i --){
+
+			if (text[i] == ' ' || text[i] == '-'){
+				count = i;
+				start = i+1;
+				break;
+			}
+		}
+
+		draw_Text(x, y+h, text.substr(0, count), fontname, ptsize);
+
+		// Substring until end and continue rendering
+		text = text.substr(start);
+		h += ptsize;
+	}
+
+
+	return true;
+}
+
 bool video::draw_Texture(int x, int y, std::string image){
 
 	SDL_Texture* tex = load_Texture(image);

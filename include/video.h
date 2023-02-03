@@ -31,6 +31,7 @@ public:
 
 	bool draw_Line(int x1, int y1, int x2, int y2);
 	bool draw_Text(int x, int y, std::string text, std::string fontname, int ptsize);
+	bool draw_TextClip(int x, int y, int w, int h, std::string text, std::string fontname, int ptsize);
 	bool draw_Texture(int x, int y, std::string image);
 };
 
