@@ -3,14 +3,13 @@
 #include "game.h"
 #include "interface/mainmenu.h"
 
-mainmenu::mainmenu(){
-
-}
-
 void mainmenu::update(){
 	//std::cout << "I want a string\n";
 	//Game->load_InputBox(&get_string);
 
+	if(Game->key_Pressed(SDL_SCANCODE_SPACE)){
+		Game->load_MessageBox("Section1");
+	}
 }
 
 void mainmenu::draw(){
@@ -21,8 +20,4 @@ void mainmenu::draw(){
 
 	for(int t = 1; t < 10; t ++)
 		Game->draw_Text(Game->mouse_PositionX(), Game->mouse_PositionY() + t, Game->get_string(), "DotGothic16-Regular.ttf", t * 4);
-}
-
-void mainmenu::get_string(interface* it, void* args[]){
-	std::cout << "String entered " << *(std::string*)args[0] << '\n';
 }

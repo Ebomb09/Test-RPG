@@ -15,6 +15,8 @@ game::~game(){
 
 void game::init(){
 	MainMenu.Game = this;
+	MessageBox.Game = this;
+	MessageBox.openFile("text.diag");
 	InputBox.Game = this;
 
 	video::init();
@@ -31,15 +33,22 @@ void game::load_Return(){
 		interface* handler = active_interfaces.front();
 
 		if(caller->callback && handler)
-			caller->callback(handler, caller->args);
+			caller->callback(handler);
 
 		caller->callback = NULL;
 	}
 }
 
-void game::load_MainMenu(){
+void game::load_MainMenu(callbackFn callback){
+	MainMenu.callback = callback;
 	active_interfaces.clear();
 	active_interfaces.push_front(&MainMenu);
+}
+
+void game::load_MessageBox(std::string section, callbackFn callback){
+	MessageBox.gotoSection(section.c_str());
+	MessageBox.callback = callback;
+	active_interfaces.push_front(&MessageBox);
 }
 
 void game::load_InputBox(callbackFn callback){

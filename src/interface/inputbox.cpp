@@ -2,11 +2,6 @@
 #include "game.h"
 #include "interface/inputbox.h"
 
-inputbox::inputbox(){
-	args = new void*[1];
-	args[0] = &output;
-}
-
 void inputbox::update(){
 
 	std::cout << "Input a string! ";

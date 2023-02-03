@@ -6,7 +6,6 @@
 
 struct inputbox : interface{
 	std::string output;
-	inputbox();
 
 	void update();
 	void draw();
