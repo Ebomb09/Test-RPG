@@ -8,6 +8,7 @@ void mainmenu::update(){
 	//Game->load_InputBox(&get_string);
 
 	if(Game->key_Pressed(SDL_SCANCODE_SPACE)){
+		Game->play_Music("test.mp3");
 		Game->load_MessageBox("Section1");
 	}
 }
