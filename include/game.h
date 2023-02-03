@@ -5,6 +5,7 @@
 
 #include "video.h"
 #include "input.h"
+#include "audio.h"
 
 #include "interface/mainmenu.h"
 #include "interface/messagebox.h"
@@ -12,7 +13,7 @@
 
 #include "character.h"
 
-class game : public input, public video{
+class game : public input, public video, public audio{
 
 	bool game_loop;
 	double frames_per_second;

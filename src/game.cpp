@@ -23,6 +23,8 @@ void game::init(){
 	video::create_Window("RPG Test", 640, 480);
 
 	input::init();
+
+	audio::init();
 }
 
 void game::load_Return(){
