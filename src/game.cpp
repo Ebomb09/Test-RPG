@@ -27,16 +27,21 @@ void game::init(){
 
 void game::load_Return(){
 
-	if(!active_interfaces.empty()){
-		interface* caller = active_interfaces.front();
-		active_interfaces.pop_front();
-		interface* handler = active_interfaces.front();
+	if(active_interfaces.empty())
+		return;
 
-		if(caller->callback && handler)
-			caller->callback(handler);
+	interface* caller = active_interfaces.front();
+	active_interfaces.pop_front();
 
-		caller->callback = NULL;
-	}
+	if(active_interfaces.empty())
+		return;
+
+	interface* handler = active_interfaces.front();
+
+	if(caller->callback && handler)
+		caller->callback(handler);
+
+	caller->callback = NULL;
 }
 
 void game::load_MainMenu(callbackFn callback){
