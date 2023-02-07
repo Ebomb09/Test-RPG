@@ -15,9 +15,13 @@ game::~game(){
 
 void game::init(){
 	MainMenu.Game = this;
+
 	MessageBox.Game = this;
 	MessageBox.openFile("text.diag");
+
 	InputBox.Game = this;
+
+	WorldMap.Game = this;
 
 	video::init();
 	video::create_Window("RPG Test", 640, 480);
@@ -61,6 +65,13 @@ void game::load_MessageBox(std::string section, callbackFn callback){
 void game::load_InputBox(callbackFn callback){
 	InputBox.callback = callback;
 	active_interfaces.push_front(&InputBox);
+}
+
+void game::load_WorldMap(std::string map, callbackFn callback){
+	WorldMap.load_Map(map);
+	WorldMap.callback = callback;
+	active_interfaces.clear();
+	active_interfaces.push_front(&WorldMap);
 }
 
 void game::run(){

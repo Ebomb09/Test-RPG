@@ -10,6 +10,7 @@
 #include "interface/mainmenu.h"
 #include "interface/messagebox.h"
 #include "interface/inputbox.h"
+#include "interface/worldmap.h"
 
 #include "character.h"
 
@@ -21,6 +22,7 @@ class game : public input, public video, public audio{
 	mainmenu MainMenu;
 	messagebox MessageBox;
 	inputbox InputBox;
+	worldmap WorldMap;
 	std::list<interface*> active_interfaces;
 
 	void init();
@@ -34,6 +36,7 @@ public:
 	void load_MainMenu(callbackFn callback=NULL);
 	void load_MessageBox(std::string section, callbackFn callback=NULL);
 	void load_InputBox(callbackFn callback=NULL);
+	void load_WorldMap(std::string map, callbackFn callback=NULL);
 	void load_Return();
 	void run();
 	void stop();
