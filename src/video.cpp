@@ -130,11 +130,15 @@ bool video::draw_TextClip(int x, int y, int clip_w, int clip_h, std::string text
 	while(text != "" && h < clip_h){
 		TTF_MeasureText(font, text.c_str(), clip_w, NULL, &count);
 
+		// Default next start is after text that can fit
+		start = count;
+
+		// If There is a space or dash found then use that
 		for(int i = count-1; i >= 0; i --){
 
 			if (text[i] == ' ' || text[i] == '-'){
-				count = i;
-				start = i+1;
+				count = start;
+				i = start + 1;
 				break;
 			}
 		}
@@ -142,7 +146,7 @@ bool video::draw_TextClip(int x, int y, int clip_w, int clip_h, std::string text
 		draw_Text(x, y+h, text.substr(0, count), fontname, ptsize);
 
 		// Substring until end and continue rendering
-		text = text.substr(start);
+		text = text.substr(count);
 		h += ptsize;
 	}
 
