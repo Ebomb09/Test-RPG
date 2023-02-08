@@ -4,11 +4,11 @@
 #include <iostream>
 #include "interface/worldmap.h"
 
-void worldmap::update(){
+void worldmap::update(game* Game){
 
 }
 
-void worldmap::draw(){
+void worldmap::draw(game* Game){
 
 }
 
@@ -23,26 +23,7 @@ bool worldmap::load_Map(std::string map){
 	}
 
 	while(!file.eof()){
-		std::string str;
-		std::getline(file, str);
-
-		char tag[80]; 
-		char tag2[80];
-
-		int c = std::sscanf(str.c_str(), "<%79s%*[^>]>%*[^<]</%79[^>]>", tag, tag2);
-
-		if(std::strcmp(tag, tag2) != 0)
-			continue;
-
-		if(std::strcmp(tag, "npc") == 0){
-			object npc;
-			int count = std::sscanf(str.c_str(), "<%*s>%*[^<]</%79[^>]>", npc.data);
-
-			if(count == 1)
-				objects.push_back(npc);
-
-			std::cout << count;
-		}
+		std::cin.get();
 	}
 
 	file.close();

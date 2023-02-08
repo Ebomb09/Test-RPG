@@ -15,27 +15,24 @@ CPPFLAGS := -std=c++14
 
 .PHONY = all clean run init
 
-all: init ${DEPS} ${EXECUTABLE}
-
-init: bin obj obj/interface deps
-
-
-bin obj obj/interface deps:
-	mkdir $@
+all: ${DEPS} ${EXECUTABLE}
 
 clean: 
 	rm ${EXECUTABLE} ${OBJECTS}
 
 run: all
-	cp -r resource/* bin
+	@cp -r $(wildcard resource/*) bin
 	cd $(dir ${EXECUTABLE}) && ./$(notdir ${EXECUTABLE})
 
 ${EXECUTABLE}: ${OBJECTS}
+	@mkdir -p $(dir EXECUTABLE)
 	${CXX} $^ -o $@ ${LIBS} ${CFLAGS} ${CPPFLAGS}
 
 obj/%.o: src/%.cpp $(wildcard include/%.h)
+	@mkdir -p $(dir $@)
 	${CXX} $< -c -o $@ ${INCLUDES} ${CFLAGS} ${CPPFLAGS}
 
 deps/%:
+	@mkdir -p deps
 	git clone git@ebomb.asuscomm.com:repos/$(@F).git $@ && \
 	cd $@ && $(MAKE) init && $(MAKE)

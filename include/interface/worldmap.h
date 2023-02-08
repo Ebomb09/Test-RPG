@@ -4,21 +4,15 @@
 #include <string>
 #include <vector>
 #include "interface/base.h"
-
-struct object{
-	int x, y;
-	char name[80];
-	char data[80];
-	char texture[80];
-};
+#include "entity/base.h"
 
 struct worldmap : interface{
 
-	int x, y;
-	std::vector<object> objects;
+	entity Player;
+	std::vector<entity*> entities;
 
-	void update();
-	void draw();
+	void update(game* Game);
+	void draw(game* Game);
 
 	bool load_Map(std::string map);
 };

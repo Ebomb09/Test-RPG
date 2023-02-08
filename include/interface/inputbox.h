@@ -7,8 +7,8 @@
 struct inputbox : interface{
 	std::string output;
 
-	void update();
-	void draw();
+	void update(game* Game);
+	void draw(game* Game);
 };
 
 #endif

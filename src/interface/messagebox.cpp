@@ -1,7 +1,7 @@
 #include "interface/messagebox.h"
 #include "game.h"
 
-void messagebox::update(){
+void messagebox::update(game* Game){
 
 	switch(current()){
 
@@ -26,7 +26,7 @@ void messagebox::update(){
 	}
 }
 
-void messagebox::draw(){
+void messagebox::draw(game* Game){
 
 	switch(current()){
 

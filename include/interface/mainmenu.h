@@ -5,8 +5,8 @@
 
 struct mainmenu : interface{
 
-	void update();
-	void draw();
+	void update(game* Game);
+	void draw(game* Game);
 };
 
 #endif

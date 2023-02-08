@@ -14,14 +14,8 @@ game::~game(){
 }
 
 void game::init(){
-	MainMenu.Game = this;
 
-	MessageBox.Game = this;
 	MessageBox.openFile("data/dialogue");
-
-	InputBox.Game = this;
-
-	WorldMap.Game = this;
 
 	video::init();
 	video::create_Window("RPG Test", 640, 480);
@@ -94,13 +88,13 @@ void game::run(){
 
 		// Only update logic for the top most interface
 		if(!active_interfaces.empty())
-			active_interfaces.front()->update();
+			active_interfaces.front()->update(this);
 
 		// Draw from bottom to top
 		video::clear_Buffer(255, 255, 255, 255);
 
 		for(std::list<interface*>::reverse_iterator it = active_interfaces.rbegin(); it != active_interfaces.rend(); it ++)
-			(*it)->draw();
+			(*it)->draw(this);
 
 		video::swap_Buffer();
 
