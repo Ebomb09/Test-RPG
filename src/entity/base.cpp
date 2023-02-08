@@ -1,6 +1,6 @@
 #include "entity/base.h"
 
-bool entity::interact(entity *Caller){
+bool entity::interact(game *Game, worldmap *World){
 	return false;
 }
 

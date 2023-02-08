@@ -8,7 +8,7 @@
 
 struct worldmap : interface{
 
-	entity Player;
+	std::string map_name;
 	std::vector<entity*> entities;
 
 	void update(game* Game);
