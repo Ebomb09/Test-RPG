@@ -8,7 +8,6 @@ struct worldmap;
 
 struct entity{
 	int x, y;
-	std::string texture;
 
 	virtual bool interact(game* Game, worldmap* World);
 	virtual void update(game* Game, worldmap* World);

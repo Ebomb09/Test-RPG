@@ -164,3 +164,12 @@ bool video::draw_Texture(int x, int y, std::string image){
 
 	return true;
 }
+
+bool video::draw_Colour(int r, int g, int b, int a){
+	return (SDL_SetRenderDrawColor(Renderer, r, g, b, a) == 0);	
+}
+
+bool video::draw_Rectangle(int x, int y, int w, int h){
+	SDL_Rect rect = {x, y, w, h};
+	return (SDL_RenderDrawRect(Renderer, &rect) == 0);
+}

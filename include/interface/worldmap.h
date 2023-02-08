@@ -11,9 +11,12 @@ struct worldmap : interface{
 	std::string map_name;
 	std::vector<entity*> entities;
 
+	~worldmap();
+
 	void update(game* Game);
 	void draw(game* Game);
 
+	void clear();
 	bool load_Map(std::string map);
 };
 
