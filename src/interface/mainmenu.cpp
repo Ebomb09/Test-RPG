@@ -8,7 +8,7 @@ void mainmenu::update(){
 	//Game->load_InputBox(&get_string);
 
 	if(Game->key_Pressed(SDL_SCANCODE_SPACE)){
-		Game->load_WorldMap("test.map");
+		Game->load_WorldMap("data/maps/test");
 	}
 }
 

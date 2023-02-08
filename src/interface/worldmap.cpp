@@ -1,4 +1,6 @@
+#include <cstring>
 #include <fstream>
+#include <string>
 #include <iostream>
 #include "interface/worldmap.h"
 
@@ -21,18 +23,25 @@ bool worldmap::load_Map(std::string map){
 	}
 
 	while(!file.eof()){
-		int x, y, type;
+		std::string str;
+		std::getline(file, str);
 
-		file >> x;
-		file >> y;
-		file >> type;
+		char tag[80]; 
+		char tag2[80];
 
-		if(file.fail()){
-			file.close();
-			return false;
+		int c = std::sscanf(str.c_str(), "<%79s%*[^>]>%*[^<]</%79[^>]>", tag, tag2);
 
-		}else{
-			std::cout << x << ':' << y << ':' << type << '\n';
+		if(std::strcmp(tag, tag2) != 0)
+			continue;
+
+		if(std::strcmp(tag, "npc") == 0){
+			object npc;
+			int count = std::sscanf(str.c_str(), "<%*s>%*[^<]</%79[^>]>", npc.data);
+
+			if(count == 1)
+				objects.push_back(npc);
+
+			std::cout << count;
 		}
 	}
 

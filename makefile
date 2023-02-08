@@ -19,13 +19,15 @@ all: init ${DEPS} ${EXECUTABLE}
 
 init: bin obj obj/interface deps
 
+
 bin obj obj/interface deps:
 	mkdir $@
 
 clean: 
 	rm ${EXECUTABLE} ${OBJECTS}
 
-run: ${EXECUTABLE}
+run: all
+	cp -r resource/* bin
 	cd $(dir ${EXECUTABLE}) && ./$(notdir ${EXECUTABLE})
 
 ${EXECUTABLE}: ${OBJECTS}

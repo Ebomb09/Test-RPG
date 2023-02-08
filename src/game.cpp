@@ -17,7 +17,7 @@ void game::init(){
 	MainMenu.Game = this;
 
 	MessageBox.Game = this;
-	MessageBox.openFile("text.diag");
+	MessageBox.openFile("data/dialogue");
 
 	InputBox.Game = this;
 
