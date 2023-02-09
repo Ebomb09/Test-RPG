@@ -12,4 +12,4 @@
 join = options("I remember..." "I don't remember.")
 
 if("join" "==" "0")
-	assign("WizardCat" "1")
+	assign("join_WizardCat" "1")

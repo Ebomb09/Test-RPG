@@ -8,11 +8,23 @@ void messagebox::proceed(){
 
 void messagebox::check(game* Game){
 
-	if(getvar("WizardCat") == 1){
-		assign("WizardCat", 0);
+	// Check dialogue variables set that we want to
+	// track. Such as items, characters, teleports, etc.
+
+	if(getvar("join_WizardCat") == 1){
+		assign("join_WizardCat", 0);
 		Game->characters[game::WizardCat].name = Game->load_InputBox("Name your character", Game->characters[game::WizardCat].name);
 		Game->load_PartyPosition(&Game->characters[game::WizardCat]);
 	}
+
+	// Set the built-in variables
+
+	int size = 0;
+	for(int i = 0; i < Game->max_party_size; i ++)
+		if(Game->party[i])
+			size++;
+
+	assign("party_size", size);
 }
 
 void messagebox::update(game* Game){
