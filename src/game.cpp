@@ -33,6 +33,9 @@ void game::load_Return(){
 	interface* caller = active_interfaces.front();
 	active_interfaces.pop_front();
 
+	if(caller == &MessageBox)
+		check_MessageBox();
+
 	if(active_interfaces.empty())
 		return;
 
@@ -112,4 +115,12 @@ void game::run(){
 
 void game::stop(){
 	game_loop = false;
+}
+
+void game::check_MessageBox(){
+
+	if(MessageBox.getvar("WizardCat") == 1){
+		MessageBox.assign("WizardCat", 0);
+		//load_PositionSelect(characters[WizardCat]);
+	}
 }

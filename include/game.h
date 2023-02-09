@@ -26,12 +26,19 @@ class game : public input, public video, public audio{
 	std::list<interface*> active_interfaces;
 
 	void init();
+	void check_MessageBox();
 
 public:
 	game();
 	~game();
 
-	character Party[4];
+	enum Archetype{
+		Rogue,
+		WizardCat,
+		Total
+	};
+	character characters[Archetype::Total];
+	character* party[4];
 
 	void load_MainMenu(callbackFn callback=NULL);
 	void load_MessageBox(std::string section, callbackFn callback=NULL);
