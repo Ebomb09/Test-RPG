@@ -5,3 +5,11 @@
 ???: "I have never experienced this before"
 ???: "Maybe if I... yeah."
 ???: "Let's see if I can SEE myself"
+
+[Select-WizardCat]
+*Cat*: "Meow"
+???: "I think I know who this is"
+join = options("I remember..." "I don't remember.")
+
+if("join" "==" "0")
+	assign("WizardCat" "1")
