@@ -9,6 +9,7 @@ void mainmenu::update(game* Game){
 
 	if(Game->key_Pressed(SDL_SCANCODE_SPACE)){
 		Game->load_WorldMap("data/maps/test");
+		Game->load_Party();
 	}
 }
 

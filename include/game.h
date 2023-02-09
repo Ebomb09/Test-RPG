@@ -11,6 +11,7 @@
 #include "interface/messagebox.h"
 #include "interface/inputbox.h"
 #include "interface/worldmap.h"
+#include "interface/partyposition.h"
 
 #include "character.h"
 
@@ -23,6 +24,7 @@ class game : public input, public video, public audio{
 	messagebox MessageBox;
 	inputbox InputBox;
 	worldmap WorldMap;
+	partyposition PartyPosition;
 	std::list<interface*> active_interfaces;
 
 	void init();
@@ -33,17 +35,21 @@ public:
 	~game();
 
 	enum Archetype{
-		Rogue,
 		WizardCat,
 		Total
 	};
 	character characters[Archetype::Total];
-	character* party[4];
+
+	static const int max_party_size = 4;
+	character* party[max_party_size];
+
+	void load_Party(std::string fname="");
 
 	void load_MainMenu(callbackFn callback=NULL);
 	void load_MessageBox(std::string section, callbackFn callback=NULL);
 	void load_InputBox(callbackFn callback=NULL);
 	void load_WorldMap(std::string map, callbackFn callback=NULL);
+	void load_PartyPosition(character* ch, callbackFn callback=NULL);
 	void load_Return();
 	void run();
 	void stop();

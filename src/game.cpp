@@ -15,6 +15,9 @@ game::~game(){
 
 void game::init(){
 
+	for(int i = 0; i < max_party_size; i ++)
+		party[i] = NULL;
+
 	MessageBox.openFile("data/dialogue");
 
 	video::init();
@@ -54,14 +57,20 @@ void game::load_MainMenu(callbackFn callback){
 }
 
 void game::load_MessageBox(std::string section, callbackFn callback){
-	MessageBox.gotoSection(section.c_str());
 	MessageBox.callback = callback;
+	MessageBox.gotoSection(section.c_str());
 	active_interfaces.push_front(&MessageBox);
 }
 
 void game::load_InputBox(callbackFn callback){
 	InputBox.callback = callback;
 	active_interfaces.push_front(&InputBox);
+}
+
+void game::load_PartyPosition(character* ch, callbackFn callback){
+	PartyPosition.callback = callback;
+	PartyPosition.set(ch);
+	active_interfaces.push_front(&PartyPosition);
 }
 
 void game::load_WorldMap(std::string map, callbackFn callback){
@@ -121,6 +130,11 @@ void game::check_MessageBox(){
 
 	if(MessageBox.getvar("WizardCat") == 1){
 		MessageBox.assign("WizardCat", 0);
-		//load_PositionSelect(characters[WizardCat]);
+		load_PartyPosition(&characters[WizardCat]);
 	}
+}
+
+void game::load_Party(std::string fname){
+
+	characters[WizardCat] = {"WizardCat"};
 }

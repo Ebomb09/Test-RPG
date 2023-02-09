@@ -3,7 +3,7 @@
 
 #include <string>
 
-class character{
+struct character{
 	std::string name;
 	int str;
 	int mag;
