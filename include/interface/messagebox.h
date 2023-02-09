@@ -6,6 +6,10 @@
 
 struct messagebox : interface, dialogue::handler{
 
+	int position;
+
+	void proceed();
+
 	void update(game* Game);
 	void draw(game* Game);
 };

@@ -1,6 +1,11 @@
 #include "interface/messagebox.h"
 #include "game.h"
 
+void messagebox::proceed(){
+	position = 0;
+	next();
+}
+
 void messagebox::update(game* Game){
 
 	switch(current()){
@@ -8,14 +13,29 @@ void messagebox::update(game* Game){
 		case dialogue::Dialogue:{
 
 			if(Game->key_Pressed(SDL_SCANCODE_SPACE))
-				next();
+				proceed();
 			break;
 		}
 
 		case dialogue::Option: {
 
-			if(Game->key_Pressed(SDL_SCANCODE_SPACE))
-				next();
+			if(Game->key_Pressed(SDL_SCANCODE_DOWN)){
+				position ++;
+
+				if(position >= getOptionCount())
+					position = 0;
+			}
+
+			if(Game->key_Pressed(SDL_SCANCODE_UP)){
+				position --;
+
+				if(position < 0)
+					position = getOptionCount() - 1;
+			}
+
+			if(Game->key_Pressed(SDL_SCANCODE_SPACE) && select(position))
+				proceed();
+
 			break;			
 		}
 
@@ -41,6 +61,8 @@ void messagebox::draw(game* Game){
 			for(int i = 0; i < getOptionCount(); i ++){
 				Game->draw_TextClip(0, 240+16*i, 640, 16, std::to_string(i) + ". " + getOptionText(i), "DotGothic16-Regular.ttf", 16);
 			}
+
+			Game->draw_Text(256, 240+16*position, "<-", "DotGothic16-Regular.ttf", 16);
 		}
 	}
 }
