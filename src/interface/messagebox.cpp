@@ -59,10 +59,10 @@ void messagebox::draw(game* Game){
 		case dialogue::Option: {
 
 			for(int i = 0; i < getOptionCount(); i ++){
-				Game->draw_TextClip(0, 240+16*i, 640, 16, std::to_string(i) + ". " + getOptionText(i), "DotGothic16-Regular.ttf", 16);
+				Game->draw_TextClip(0, 240+36*i, 640, 16, std::to_string(i) + ". " + getOptionText(i), "DotGothic16-Regular.ttf", 36);
 			}
 
-			Game->draw_Text(256, 240+16*position, "<-", "DotGothic16-Regular.ttf", 16);
+			Game->draw_Text(480, 240+36*position, "<-", "DotGothic16-Regular.ttf", 36);
 		}
 	}
 }
