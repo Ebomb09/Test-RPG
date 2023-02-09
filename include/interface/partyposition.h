@@ -10,6 +10,7 @@ struct partyposition : interface{
 	int position;
 
 	void set(character* ch);
+	int get();
 
 	void update(game* Game);
 	void draw(game* Game);

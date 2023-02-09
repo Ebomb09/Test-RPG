@@ -6,6 +6,10 @@ void partyposition::set(character* ch){
 	position = 0;
 }
 
+int partyposition::get(){
+	return position;
+}
+
 void partyposition::update(game* Game){
 
 	if(Game->key_Pressed(SDL_SCANCODE_UP)){
@@ -42,8 +46,10 @@ void partyposition::update(game* Game){
 		Game->load_Return();
 	}
 
-	if(Game->key_Pressed(SDL_SCANCODE_ESCAPE))
+	if(Game->key_Pressed(SDL_SCANCODE_ESCAPE)){
+		position = -1;
 		Game->load_Return();
+	}
 }
 
 void partyposition::draw(game* Game){

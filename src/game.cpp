@@ -29,58 +29,47 @@ void game::init(){
 }
 
 void game::load_Return(){
-
-	if(active_interfaces.empty())
-		return;
-
-	interface* caller = active_interfaces.front();
 	active_interfaces.pop_front();
-
-	if(caller == &MessageBox)
-		check_MessageBox();
-
-	if(active_interfaces.empty())
-		return;
-
-	interface* handler = active_interfaces.front();
-
-	if(caller->callback && handler)
-		caller->callback(handler);
-
-	caller->callback = NULL;
 }
 
-void game::load_MainMenu(callbackFn callback){
-	MainMenu.callback = callback;
+void game::load_MainMenu(){
 	active_interfaces.clear();
 	active_interfaces.push_front(&MainMenu);
 }
 
-void game::load_MessageBox(std::string section, callbackFn callback){
-	MessageBox.callback = callback;
+void game::load_MessageBox(std::string section){
 	MessageBox.gotoSection(section.c_str());
+
 	active_interfaces.push_front(&MessageBox);
+	run(&MessageBox);
 }
 
-void game::load_InputBox(callbackFn callback){
-	InputBox.callback = callback;
+std::string game::load_InputBox(std::string prompt, std::string default_string, int limit){
+	InputBox.set(this, prompt, default_string, limit);
+
 	active_interfaces.push_front(&InputBox);
+	run(&InputBox);
+
+	return get_string();
 }
 
-void game::load_PartyPosition(character* ch, callbackFn callback){
-	PartyPosition.callback = callback;
+int game::load_PartyPosition(character* ch){
 	PartyPosition.set(ch);
+
 	active_interfaces.push_front(&PartyPosition);
+	run(&PartyPosition);
+
+	return PartyPosition.get();
 }
 
-void game::load_WorldMap(std::string map, callbackFn callback){
+void game::load_WorldMap(std::string map){
 	WorldMap.load_Map(map);
-	WorldMap.callback = callback;
+
 	active_interfaces.clear();
 	active_interfaces.push_front(&WorldMap);
 }
 
-void game::run(){
+void game::run(interface* watch){
 
 	using clock = std::chrono::high_resolution_clock;
 	using time_t = clock::time_point;
@@ -119,19 +108,19 @@ void game::run(){
 			double diff = seconds_per_frame * 1000. - duration.count();
 			std::this_thread::sleep_for(duration_t(diff));
 		}
+
+		// If the game wants to run an interface until it's finished
+		// ie. no longer active
+		if(watch){
+
+			if(active_interfaces.empty() || active_interfaces.front() != watch)
+				return;
+		}
 	}
 }
 
 void game::stop(){
 	game_loop = false;
-}
-
-void game::check_MessageBox(){
-
-	if(MessageBox.getvar("WizardCat") == 1){
-		MessageBox.assign("WizardCat", 0);
-		load_PartyPosition(&characters[WizardCat]);
-	}
 }
 
 void game::load_Party(std::string fname){

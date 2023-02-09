@@ -6,6 +6,15 @@ void messagebox::proceed(){
 	next();
 }
 
+void messagebox::check(game* Game){
+
+	if(getvar("WizardCat") == 1){
+		assign("WizardCat", 0);
+		Game->characters[game::WizardCat].name = Game->load_InputBox("Name your character", Game->characters[game::WizardCat].name);
+		Game->load_PartyPosition(&Game->characters[game::WizardCat]);
+	}
+}
+
 void messagebox::update(game* Game){
 
 	switch(current()){
@@ -40,6 +49,7 @@ void messagebox::update(game* Game){
 		}
 
 		default: {
+			check(Game);
 			Game->load_Return();
 			break;
 		}
