@@ -133,20 +133,24 @@ bool video::draw_TextClip(int x, int y, int clip_w, int clip_h, std::string text
 		// Default next start is after text that can fit
 		start = count;
 
-		// If There is a space or dash found then use that
-		for(int i = count-1; i >= 0; i --){
+		// If it doesn't fit all content then 
+		// find next space / dash for delimiter
+		if(count < text.size()){
 
-			if (text[i] == ' ' || text[i] == '-'){
-				count = start;
-				i = start + 1;
-				break;
+			for(int i = count-1; i >= 0; i --){
+
+				if (text[i] == ' ' || text[i] == '-'){
+					count = i;
+					start = i + 1;
+					break;
+				}
 			}
 		}
 
 		draw_Text(x, y+h, text.substr(0, count), fontname, ptsize);
 
 		// Substring until end and continue rendering
-		text = text.substr(count);
+		text = text.substr(start);
 		h += ptsize;
 	}
 
