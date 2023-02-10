@@ -70,4 +70,8 @@ void partyposition::draw(game* Game){
 	Game->draw_Line(80, 48 + position * 80, 128, 48 + position * 80);
 	Game->draw_Line(80, 48 + position * 80, 100, 48 + position * 80 - 20);
 	Game->draw_Line(80, 48 + position * 80, 100, 48 + position * 80 + 20);
+
+	Game->draw_TextureClip(128, 16 + position * 80, 1, 0, 32, 32, 2, 2, select->asset);
+	Game->draw_Colour(0, 0, 0, 255);
+	Game->draw_Rectangle(128, 16 + position * 80, 64, 64);
 }

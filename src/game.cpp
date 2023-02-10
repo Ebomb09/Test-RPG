@@ -5,7 +5,8 @@
 
 game::game(){
 	game_loop = true;
-	frames_per_second = 60.;
+	frames_per_second = 60;
+	delta_time = 0;
 	init();
 }
 
@@ -73,13 +74,13 @@ void game::run(interface* watch){
 
 	using clock = std::chrono::high_resolution_clock;
 	using time_t = clock::time_point;
-	using duration_t = std::chrono::duration<double, std::milli>;
+	using duration_t = std::chrono::duration<double>;
 
 	while(game_loop){
 
-		// Get start time of the execution loop
-		double seconds_per_frame = 1 / frames_per_second;
+		// Get start time
 		time_t time_start = clock::now();
+		double time_per_frame = 1. / (double)frames_per_second;
 
 		// Check if there are any inputs
 		input::poll();
@@ -91,6 +92,14 @@ void game::run(interface* watch){
 		if(!active_interfaces.empty())
 			active_interfaces.front()->update(this);
 
+		// If the game wants to run an interface until it's finished
+		// ie. no longer active
+		if(watch){
+
+			if(active_interfaces.empty() || active_interfaces.front() != watch)
+				return;
+		}
+
 		// Draw from bottom to top
 		video::clear_Buffer(255, 255, 255, 255);
 
@@ -101,21 +110,14 @@ void game::run(interface* watch){
 
 		// Calculate delta time and sleep if needed
 		// to achieve the desired FPS
-		time_t time_end = clock::now();
-		duration_t duration = std::chrono::duration_cast<duration_t>(time_end - time_start);
+		duration_t duration = std::chrono::duration_cast<duration_t>(clock::now() - time_start);
 
-		if(duration.count() < seconds_per_frame * 1000.){
-			double diff = seconds_per_frame * 1000. - duration.count();
-			std::this_thread::sleep_for(duration_t(diff));
-		}
+		if(duration.count() < time_per_frame){
+			while(clock::now() < time_start + duration_t(time_per_frame - duration.count()));
 
-		// If the game wants to run an interface until it's finished
-		// ie. no longer active
-		if(watch){
-
-			if(active_interfaces.empty() || active_interfaces.front() != watch)
-				return;
-		}
+			delta_time = time_per_frame;
+		}else
+			delta_time = duration.count();
 	}
 }
 
@@ -123,7 +125,14 @@ void game::stop(){
 	game_loop = false;
 }
 
+double game::delta_Time(){
+	return delta_time;
+}
+
 void game::load_Party(std::string fname){
 
-	characters[WizardCat] = {"WizardCat"};
+	characters[WizardCat] = {
+		"data/textures/WizardCat.png", 
+		"WizardCat"
+	};
 }

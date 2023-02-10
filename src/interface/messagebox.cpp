@@ -20,11 +20,18 @@ void messagebox::check(game* Game){
 	// Set the built-in variables
 
 	int size = 0;
-	for(int i = 0; i < Game->max_party_size; i ++)
+	int wizardcat = 0;
+	for(int i = 0; i < Game->max_party_size; i ++){
+
 		if(Game->party[i])
 			size++;
 
+		if(Game->party[i] == &Game->characters[game::WizardCat])
+			wizardcat = 1;
+	}
+
 	assign("party_size", size);
+	assign("in_party_WizardCat", wizardcat);
 }
 
 void messagebox::update(game* Game){

@@ -4,6 +4,7 @@
 #include <string>
 
 struct character{
+	std::string asset;
 	std::string name;
 	int str;
 	int mag;

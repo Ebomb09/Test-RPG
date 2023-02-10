@@ -17,12 +17,13 @@ video::~video(){
 	if(Renderer)
 		SDL_DestroyRenderer(Renderer);
 
+	IMG_Quit();
 	TTF_Quit();
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 bool video::init(){
-	return (SDL_InitSubSystem(SDL_INIT_VIDEO) == 0 && TTF_Init());
+	return (SDL_InitSubSystem(SDL_INIT_VIDEO) == 0 && TTF_Init() && IMG_Init(IMG_INIT_PNG));
 }
 
 bool video::create_Window(const char* name, int width, int height){
@@ -56,9 +57,7 @@ SDL_Texture* video::load_Texture(std::string filename){
 	SDL_Texture* tex = textures.find(filename);
 
 	if(!tex){
-		SDL_Surface* surface = SDL_LoadBMP(filename.c_str());
-		tex = SDL_CreateTextureFromSurface(Renderer, surface);
-		SDL_FreeSurface(surface);
+		tex = IMG_LoadTexture(Renderer, filename.c_str());
 
 		if(tex){
 			SDL_Texture* old = textures.replace(tex, filename);
@@ -116,9 +115,7 @@ bool video::draw_Text(int x, int y, std::string text, std::string fontname, int 
 	SDL_Rect src = {0, 0, w, h};
 	SDL_Rect dst = {x, y, w, h};
 
-	SDL_RenderCopy(Renderer, tex, &src, &dst);
-
-	return true;
+	return (SDL_RenderCopy(Renderer, tex, &src, &dst) == 0);
 }
 
 bool video::draw_TextClip(int x, int y, int clip_w, int clip_h, std::string text, std::string fontname, int ptsize){
@@ -147,13 +144,13 @@ bool video::draw_TextClip(int x, int y, int clip_w, int clip_h, std::string text
 			}
 		}
 
-		draw_Text(x, y+h, text.substr(0, count), fontname, ptsize);
+		if(!draw_Text(x, y+h, text.substr(0, count), fontname, ptsize))
+			return false;
 
 		// Substring until end and continue rendering
 		text = text.substr(start);
 		h += ptsize;
 	}
-
 
 	return true;
 }
@@ -164,9 +161,28 @@ bool video::draw_Texture(int x, int y, std::string image){
 
 	SDL_Rect src = {0, 0, 128, 128};
 	SDL_Rect dst = {x, y, 128, 128};
-	SDL_RenderCopy(Renderer, tex, &src, &dst);
 
-	return true;
+	return (SDL_RenderCopy(Renderer, tex, &src, &dst) == 0);
+}
+
+bool video::draw_TextureClip(int x, int y, int clip_x, int clip_y, int clip_w, int clip_h, double scale_w, double scale_h, std::string image){
+
+	SDL_Texture* tex = load_Texture(image);
+
+	SDL_Rect src = {
+		clip_x * clip_w, 
+		clip_y * clip_h, 
+		clip_w, 
+		clip_h
+	};
+	SDL_Rect dst = {
+		x, 
+		y, 
+		(int)(clip_w * scale_w), 
+		(int)(clip_h * scale_h)
+	};
+
+	return (SDL_RenderCopy(Renderer, tex, &src, &dst) == 0);
 }
 
 bool video::draw_Colour(int r, int g, int b, int a){

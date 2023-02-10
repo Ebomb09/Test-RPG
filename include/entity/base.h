@@ -2,12 +2,14 @@
 #define GAME_WORLD_ENTITY_H
 
 #include <string>
+#include "vector.h"
 
 struct game;
 struct worldmap;
 
 struct entity{
-	int x, y;
+
+	point position;
 
 	virtual bool interact(game* Game, worldmap* World);
 	virtual void update(game* Game, worldmap* World);

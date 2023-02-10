@@ -6,6 +6,7 @@
 
 #include "SDL2/SDL.h"
 #include "SDL_ttf.h"
+#include "SDL_image.h"
 
 #include "page.h"
 
@@ -30,11 +31,15 @@ public:
 	~video();
 
 	bool draw_Colour(int r, int g, int b, int a);
+
 	bool draw_Line(int x1, int y1, int x2, int y2);
+	bool draw_Rectangle(int x, int y, int w, int h);
+
 	bool draw_Text(int x, int y, std::string text, std::string fontname, int ptsize);
 	bool draw_TextClip(int x, int y, int w, int h, std::string text, std::string fontname, int ptsize);
+	
 	bool draw_Texture(int x, int y, std::string image);
-	bool draw_Rectangle(int x, int y, int w, int h);
+	bool draw_TextureClip(int x, int y, int clip_x, int clip_y, int clip_w, int clip_h, double scale_w, double scale_h, std::string image);
 };
 
 #endif

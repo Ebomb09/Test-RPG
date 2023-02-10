@@ -18,7 +18,8 @@
 class game : public input, public video, public audio{
 
 	bool game_loop;
-	double frames_per_second;
+	long frames_per_second;
+	double delta_time;
 
 	mainmenu MainMenu;
 	messagebox MessageBox;
@@ -50,8 +51,11 @@ public:
 	void load_WorldMap(std::string map);
 	int load_PartyPosition(character* ch);
 	void load_Return();
+
 	void run(interface* watch=NULL);
 	void stop();
+
+	double delta_Time();
 };
 
 #endif
