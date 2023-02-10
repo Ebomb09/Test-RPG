@@ -28,7 +28,7 @@ void battle::draw(game* Game){
 
 	for(int i = 0; i < Game->max_party_size; i ++){
 
-		if(Game->party[0]){
+		if(Game->party[i]){
 
 			Game->draw_TextureClip(
 				start.x + transition[i].get().x * transition[i].percent(), 
@@ -36,7 +36,7 @@ void battle::draw(game* Game){
 				0, 0,
 				32, 32,
 				2, 2,
-				Game->party[0]->asset
+				Game->party[i]->asset
 				);
 		}
 	}
