@@ -59,10 +59,18 @@ void partyposition::draw(game* Game){
 	Game->draw_Colour(255, 0, 255, 255);
 
 	for(int i = 0; i < Game->max_party_size; i ++){
-		Game->draw_Rectangle(16, 16 + i * 80, 64, 64);
 
 		if(Game->party[i])
-			Game->draw_Text(16, 16 + i * 80, Game->party[i]->name, "DotGothic16-Regular.ttf", 26);
+			Game->draw_TextureClip(
+				16, 
+				16 + i * 80, 
+				1, 0,
+				32, 32,
+				2, 2,
+				Game->party[i]->asset
+				);
+
+		Game->draw_Rectangle(16, 16 + i * 80, 64, 64);
 	}
 
 	Game->draw_Colour(0, 0, 255, 255);
