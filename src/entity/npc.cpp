@@ -1,9 +1,8 @@
 #include "entity/npc.h"
 #include "game.h"
 
-npc::npc(int _x, int _y, std::string _script){
-	position.x = _x;
-	position.y = _y;
+npc::npc(int x, int y, std::string _script){
+	position = {x, y};
 	script = _script;
 }
 

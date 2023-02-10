@@ -1,9 +1,8 @@
 #include "entity/player.h"
 #include "game.h"
 
-player::player(int _x, int _y){
-	position.x = _x;
-	position.y = _y;
+player::player(int x, int y){
+	position = {x, y};
 }
 
 void player::update(game* Game, worldmap* World){

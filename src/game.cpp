@@ -45,6 +45,15 @@ void game::load_MessageBox(std::string section){
 	run(&MessageBox);
 }
 
+bool game::load_Battle(){
+	Battle.set();
+
+	active_interfaces.push_front(&Battle);
+	run(&Battle);
+
+	return Battle.get();
+}
+
 std::string game::load_InputBox(std::string prompt, std::string default_string, int limit){
 	InputBox.set(this, prompt, default_string, limit);
 

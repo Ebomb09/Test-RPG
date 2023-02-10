@@ -8,7 +8,7 @@ struct player : entity{
 
 	delay<point> move;
 
-	player(int _x, int _y);
+	player(int x, int y);
 
 	void update(game* Game, worldmap* World);
 	void draw(game* Game, worldmap* World);

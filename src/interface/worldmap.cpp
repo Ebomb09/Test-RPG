@@ -3,6 +3,7 @@
 #include "game.h"
 #include "entity/player.h"
 #include "entity/npc.h"
+#include "entity/encounter.h"
 
 worldmap::~worldmap(){
 	clear();
@@ -60,6 +61,13 @@ bool worldmap::load_Map(std::string map){
 
 				if(file >> x >> y >> script)
 					entities.push_back(new npc(x, y, script));
+			}
+
+			if(name == "encounter"){
+				int x, y;
+
+				if(file >> x >> y)
+					entities.push_back(new encounter(x, y));
 			}
 		}
 	}

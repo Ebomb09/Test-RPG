@@ -8,7 +8,7 @@ struct npc : entity{
 
 	std::string script;
 
-	npc(int _x, int _y, std::string _script);
+	npc(int x, int y, std::string _script);
 
 	bool interact(game* Game, worldmap* World);
 	void draw(game* Game, worldmap* World);
