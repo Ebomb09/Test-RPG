@@ -8,6 +8,10 @@
 
 [Select-WizardCat]
 *Cat*: "Meow"
+
+if("in_party_WizardCat" "==" "1")
+	exit()
+
 ???: "I think I know who this is"
 join = options("I remember..." "I don't remember.")
 
