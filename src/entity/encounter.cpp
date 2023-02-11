@@ -3,6 +3,7 @@
 
 encounter::encounter(int x, int y){
 	position = {x, y};
+	what = type::Encounter;
 }
 
 void encounter::draw(game* Game, worldmap* World){

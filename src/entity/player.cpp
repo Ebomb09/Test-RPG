@@ -3,38 +3,33 @@
 
 player::player(int x, int y){
 	position = {x, y};
+	solid = true;
+	what = type::Player;
 }
 
 void player::update(game* Game, worldmap* World){
 
 	if(move.done()){
-		position.x += move.get().x;
-		position.y += move.get().y;
+		position += move.get();
 		move.get() = {0, 0};
 	}
 
 	if(Game->key_Held(SDL_SCANCODE_UP))
-		move.set(0.25, {0, -1});
+		try_Move(World, {0, -1});
 
 	if(Game->key_Held(SDL_SCANCODE_DOWN))
-		move.set(0.25, {0, 1});
+		try_Move(World, {0, 1});
 	
 	if(Game->key_Held(SDL_SCANCODE_LEFT))
-		move.set(0.25, {-1, 0});
+		try_Move(World, {-1, 0});
 	
 	if(Game->key_Held(SDL_SCANCODE_RIGHT))
-		move.set(0.25, {1, 0});
+		try_Move(World, {1, 0});
 
 	if(Game->key_Pressed(SDL_SCANCODE_SPACE)){
 
-		for(entity* ent: World->entities){
-
-			if(ent == this)
-				continue;
-
-			if(ent->position.x == position.x && ent->position.y == position.y)
-				ent->interact(Game, World);
-		}
+		for(auto& ent : World->colliding(this, facing, false, type::NPC))
+			ent->interact(Game, World);
 	}
 
 	move.increment(Game->delta_Time());
@@ -60,4 +55,11 @@ void player::draw(game* Game, worldmap* World){
 		32, 32, 
 		2, 2, 
 		asset);
+}
+
+void player::try_Move(worldmap* World, point position){
+	facing = position;
+
+	if(World->colliding(this, position, true).size() == 0)
+		move.set(0.25, position);
 }

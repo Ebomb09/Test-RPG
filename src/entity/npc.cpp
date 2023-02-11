@@ -4,6 +4,8 @@
 npc::npc(int x, int y, std::string _script){
 	position = {x, y};
 	script = _script;
+	solid = true;
+	what = type::NPC;
 }
 
 bool npc::interact(game* Game, worldmap* World){
