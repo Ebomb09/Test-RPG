@@ -31,6 +31,26 @@ void worldmap::clear(){
 	entities.clear();
 }
 
+std::vector<entity*> worldmap::colliding(entity* source, point transition, bool solid, entity::type type){
+	std::vector<entity*> collisions;
+
+	for(int i = 0; i < entities.size(); i ++){
+
+		if(entities[i] == source)
+			continue;
+
+		if(source->position + transition == entities[i]->position)
+
+			if((entities[i]->solid && solid) || !solid)
+
+				if(entities[i]->what == type || type == entity::type::Generic)
+
+					collisions.push_back(entities[i]);
+			
+	}
+	return collisions;
+}
+
 bool worldmap::load_Map(std::string map){
 
 	clear();

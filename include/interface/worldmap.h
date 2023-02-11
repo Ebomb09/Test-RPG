@@ -13,6 +13,8 @@ struct worldmap : interface{
 
 	~worldmap();
 
+	std::vector<entity*> colliding(entity* source, point transition = {0, 0}, bool solid = false, entity::type type = entity::type::Generic);
+
 	void update(game* Game);
 	void draw(game* Game);
 
