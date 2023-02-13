@@ -15,13 +15,16 @@
 #include "interface/battle.h"
 
 #include "character.h"
+#include "move.h"
 
 class game : public input, public video, public audio{
 
+	/* Game control declarations */
 	bool game_loop;
 	long frames_per_second;
 	double delta_time;
 
+	/* Interfaces declarations */
 	mainmenu MainMenu;
 	messagebox MessageBox;
 	inputbox InputBox;
@@ -30,23 +33,40 @@ class game : public input, public video, public audio{
 	battle Battle;
 	std::list<interface*> active_interfaces;
 
+	/* Init subsystems */
 	void init();
+
+	/* Movelist */
+	enum class MoveList{
+		Attack,
+		Item,
+		Fire,
+		Thunder,
+		Ice,
+		Total
+	};
+	move moves[(int)MoveList::Total];
+
+	void load_Moves();
 
 public:
 	game();
 	~game();
 
-	enum Archetype{
+
+	/* Character / Party */
+	enum class Archetype{
 		WizardCat,
 		Total
 	};
-	character characters[Archetype::Total];
+	character characters[(int)Archetype::Total];
 
 	static const int max_party_size = 4;
 	character* party[max_party_size];
 
 	void load_Party(std::string fname="");
 
+	/* Interface Runners */
 	void load_MainMenu();
 	void load_MessageBox(std::string section);
 	std::string load_InputBox(std::string prompt, std::string default_string="", int limit=32);
@@ -55,9 +75,11 @@ public:
 	bool load_Battle();
 	void load_Return();
 
+	/* Game control */
 	void run(interface* watch=NULL);
 	void stop();
 
+	/* Time Calculations */
 	double delta_Time();
 };
 
