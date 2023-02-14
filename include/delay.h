@@ -11,7 +11,7 @@ class delay{
 	type variable;
 
 public:
-	delay() : time(1), max_time(1), variable() {}
+	delay() : time(0), max_time(0), variable() {}
 
 	void increment(double delta){
 
@@ -20,6 +20,11 @@ public:
 		
 		if(done())
 			time = max_time;
+	}
+
+	void reset(){
+		variable = type();
+		max_time = 0;
 	}
 
 	bool set(double delta, type desired){
@@ -38,6 +43,10 @@ public:
 	}
 
 	double percent(){
+
+		if(max_time <= 0)
+			return 0.0;
+
 		return time / max_time;
 	}
 
