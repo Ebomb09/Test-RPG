@@ -36,35 +36,37 @@ class game : public input, public video, public audio{
 	/* Init subsystems */
 	void init();
 
-	/* Movelist */
-	enum class MoveList{
-		Attack,
-		Item,
-		Fire,
-		Thunder,
-		Ice,
-		Total
-	};
-	move moves[(int)MoveList::Total];
-
-	void load_Moves();
-
 public:
 	game();
 	~game();
 
-
 	/* Character / Party */
-	enum class Archetype{
-		WizardCat,
-		Total
+	struct characters{
+		enum{
+			wizardcat,
+			total,
+			maxpartysize = 4
+		};
 	};
-	character characters[(int)Archetype::Total];
-
-	static const int max_party_size = 4;
-	character* party[max_party_size];
+	character Characters[characters::total];
+	character* Party[characters::maxpartysize];
 
 	void load_Party(std::string fname="");
+
+	/* Movelist */
+	struct moves{
+		enum{
+			attack,
+			item,
+			fire,
+			thunder,
+			ice,
+			total
+		};
+	};
+	move* Moves[moves::total];
+
+	void load_Moves();
 
 	/* Interface Runners */
 	void load_MainMenu();

@@ -17,14 +17,14 @@ void partyposition::update(game* Game){
 		position --;
 
 		if(position < 0)
-			position = Game->max_party_size-1;
+			position = game::characters::maxpartysize-1;
 	}
 
 	if(Game->key_Pressed(SDL_SCANCODE_DOWN)){
 
 		position ++;
 
-		if(position >= Game->max_party_size)
+		if(position >= game::characters::maxpartysize)
 			position = 0;
 	}
 
@@ -33,16 +33,16 @@ void partyposition::update(game* Game){
 		if(select){
 
 			// Swap if the selected character is already in the party
-			for(int i = 0; i < Game->max_party_size; i ++){
+			for(int i = 0; i < game::characters::maxpartysize; i ++){
 
-				if(i != position && Game->party[i] == select){
-					Game->party[i] = Game->party[position];
+				if(i != position && Game->Party[i] == select){
+					Game->Party[i] = Game->Party[position];
 					break;
 				}
 			}
 		}
 
-		Game->party[position] = select;
+		Game->Party[position] = select;
 		Game->load_Return();
 	}
 
@@ -58,16 +58,16 @@ void partyposition::draw(game* Game){
 
 	Game->draw_Colour(255, 0, 255, 255);
 
-	for(int i = 0; i < Game->max_party_size; i ++){
+	for(int i = 0; i < game::characters::maxpartysize; i ++){
 
-		if(Game->party[i])
+		if(Game->Party[i])
 			Game->draw_TextureClip(
 				16, 
 				16 + i * 80, 
 				1, 0,
 				32, 32,
 				2, 2,
-				Game->party[i]->asset
+				Game->Party[i]->asset
 				);
 
 		Game->draw_Rectangle(16, 16 + i * 80, 64, 64);

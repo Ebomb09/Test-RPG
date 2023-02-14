@@ -16,8 +16,8 @@ game::~game(){
 
 void game::init(){
 
-	for(int i = 0; i < max_party_size; i ++)
-		party[i] = NULL;
+	for(int i = 0; i < game::characters::maxpartysize; i ++)
+		Party[i] = NULL;
 
 	MessageBox.openFile("data/dialogue");
 
@@ -140,7 +140,7 @@ double game::delta_Time(){
 
 void game::load_Party(std::string fname){
 
-	characters[WizardCat] = {
+	Characters[characters::wizardcat] = {
 		"data/textures/WizardCat.png", 
 		"WizardCat"
 	};

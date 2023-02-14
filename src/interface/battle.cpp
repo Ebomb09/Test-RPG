@@ -19,16 +19,16 @@ void battle::update(game* Game){
 	if(Game->key_Pressed(SDL_SCANCODE_ESCAPE))
 		Game->load_Return();
 
-	for(int i = 0; i < Game->max_party_size; i ++){
+	for(int i = 0; i < game::characters::maxpartysize; i ++){
 		transition[i].increment(Game->delta_Time());
 	}
 }
 
 void battle::draw(game* Game){
 
-	for(int i = 0; i < Game->max_party_size; i ++){
+	for(int i = 0; i < game::characters::maxpartysize; i ++){
 
-		if(Game->party[i]){
+		if(Game->Party[i]){
 
 			Game->draw_TextureClip(
 				start.x + transition[i].get().x * transition[i].percent(), 
@@ -36,7 +36,7 @@ void battle::draw(game* Game){
 				0, 0,
 				32, 32,
 				2, 2,
-				Game->party[i]->asset
+				Game->Party[i]->asset
 				);
 		}
 	}

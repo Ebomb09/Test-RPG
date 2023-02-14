@@ -40,10 +40,10 @@ void player::draw(game* Game, worldmap* World){
 	// Draw first party member
 	std::string asset = "data/textures/ghost.png";
 
-	for(int i = 0; i < Game->max_party_size; i ++){
+	for(int i = 0; i < game::characters::maxpartysize; i ++){
 
-		if(Game->party[i]){
-			asset = Game->party[i]->asset;
+		if(Game->Party[i]){
+			asset = Game->Party[i]->asset;
 			break;
 		}
 	}
