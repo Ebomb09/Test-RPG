@@ -2,12 +2,31 @@
 #include "game.h"
 #include <cmath>
 
-void battle::set(){
+void battle::set(game* Game){
 
-	start = {320, 240};
+	cursor = 0;
+	mode = waiting_to_complete;
 
-	for(int i = 0; i < 4; i ++)
-		transition[i].set(0.5, {480 + i * 16 - start.x, 64 + i * 80 - start.y});
+	actors.clear();
+
+	for(int i = 0; i < game::characters::maxpartysize; i ++){
+
+		if(Game->Party[i]){
+			actor player = {
+				Game->Party[i],
+				{320, 240}
+			};
+			player.action.set(0.5, {action::intro, {480 + i * 16 - 320, 64 + i * 80 - 240}});
+			actors.push_back(player);
+		}
+	}
+
+	actor enemy = {
+		&Game->Enemies[game::enemies::slime],
+		{16, 200}
+	};
+	enemy.action.set(1, {action::intro, {}});
+	actors.push_back(enemy);
 }
 
 bool battle::get(){
@@ -16,28 +35,117 @@ bool battle::get(){
 
 void battle::update(game* Game){
 
+	switch(mode){
+
+		case waiting_to_complete: {
+
+			actor* next = NULL;
+
+			for(auto& actor : actors){
+
+				if(actor.action.done()){
+
+					if(actor.action.get().type == action::intro)
+						actor.position += actor.action.get().transition;
+
+					actor.action.reset();
+				
+				}else{
+
+					if(actor.action.get().type == action::intro)
+						actor.action.increment(Game->delta_Time());
+
+					if(!next || actor.who->stats.spd > next->who->stats.spd)
+						next = &actor;
+				}
+			}
+
+			if(next){
+
+				if(next->action.get().type != action::intro)
+					next->action.increment(Game->delta_Time());
+
+			}else{
+				mode = inputting_actions;
+			}
+
+			break;
+		}
+
+		case inputting_actions: {
+
+			actor* next = NULL;
+
+			for(auto& actor : actors){
+
+				if(actor.action.done()){
+
+					if(!next || actor.who->stats.spd > next->who->stats.spd)
+						next = &actor;
+				}
+			}
+
+			if(next){
+				next->action.set(0.2, {action::attack, {0, 0}});
+			}
+
+			if(!next)
+				mode = waiting_to_complete;
+
+			break;
+		} 
+	}
+
 	if(Game->key_Pressed(SDL_SCANCODE_ESCAPE))
 		Game->load_Return();
-
-	for(int i = 0; i < game::characters::maxpartysize; i ++){
-		transition[i].increment(Game->delta_Time());
-	}
 }
 
 void battle::draw(game* Game){
 
-	for(int i = 0; i < game::characters::maxpartysize; i ++){
+	switch(mode){
 
-		if(Game->Party[i]){
+		case waiting_to_complete:
+			Game->draw_Text(0, 440, "WAITING_TO_COMPLETE", "DotGothic16-Regular.ttf", 13);
+			break;
 
-			Game->draw_TextureClip(
-				start.x + transition[i].get().x * transition[i].percent(), 
-				start.y + transition[i].get().y * transition[i].percent() - 120 * std::sin(M_PI * transition[i].percent()),
-				0, 0,
-				32, 32,
-				2, 2,
-				Game->Party[i]->asset
-				);
-		}
+		case inputting_actions:
+			Game->draw_Text(0, 440, "INPUTTING_ACTIONS", "DotGothic16-Regular.ttf", 13);
+			break;
 	}
+
+	for(auto& actor : actors){
+
+		point pos = actor.position;
+
+		switch(actor.action.get().type){
+
+			case action::intro: {
+				pos += actor.action.get().transition * actor.action.percent();
+				pos.y -= 120 * std::sin(M_PI * actor.action.percent());
+				break;
+			}
+
+			case action::attack:{
+				pos.x -= 30 * std::cos(M_PI * 1.5 + M_PI * actor.action.percent());
+				break;
+			}
+		}
+
+		Game->draw_TextureClip(
+			pos.x, pos.y,
+			0, 0,
+			32, 32,
+			2, 2,
+			actor.who->asset
+			);
+
+		Game->draw_Text(
+			pos.x, pos.y + 64,
+			"Health" + std::to_string(actor.who->stats.hp),
+			"DotGothic16-Regular.ttf",
+			13
+			);
+	}
+
+
 }
