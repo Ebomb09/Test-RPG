@@ -7,7 +7,7 @@
 struct move{
 	std::string asset;
 	std::string name;
-	stats scaling;
+	statistics scaling;
 };
 
 #endif

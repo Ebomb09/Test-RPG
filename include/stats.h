@@ -1,9 +1,8 @@
 #ifndef GAME_STATS_H
 #define GAME_STATS_H
 
-struct stats{
+struct statistics{
 	int hp;
-	int maxhp;
 	int str;
 	int mag;
 	int vit;

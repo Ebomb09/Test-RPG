@@ -9,7 +9,8 @@
 struct character{
 	std::string asset;
 	std::string name;
-	stats status;
+	statistics stats;
+	statistics status;
 	std::vector<move*> learned_moves;
 	std::vector<move*> compatible_moves; 
 };
