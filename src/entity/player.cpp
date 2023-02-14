@@ -30,6 +30,9 @@ void player::update(game* Game, worldmap* World){
 
 		for(auto& ent : World->colliding(this, facing, false, type::NPC))
 			ent->interact(Game, World);
+
+		for(auto& ent : World->colliding(this, {}, false, type::Encounter))
+			ent->interact(Game, World);
 	}
 
 	move.increment(Game->delta_Time());
