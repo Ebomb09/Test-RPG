@@ -14,6 +14,7 @@ void battle::set(game* Game){
 		if(Game->Party[i]){
 			actor player = {
 				Game->Party[i],
+				Game->Party[i]->status,
 				{320, 240}
 			};
 			player.work.set(0.5, {action::intro, {480 + i * 16 - 320, 64 + i * 80 - 240}});
@@ -23,6 +24,7 @@ void battle::set(game* Game){
 
 	actor enemy = {
 		&Game->Enemies[game::enemies::slime],
+		Game->Enemies[game::enemies::slime].stats,
 		{16, 200}
 	};
 	enemy.work.set(1, {action::intro, {}});
@@ -86,7 +88,30 @@ void battle::update(game* Game){
 			}
 
 			if(next){
-				next->work.set(0.2, {action::attack, {0, 0}});
+
+				if(Game->is_Enemy(next->who))
+					next->work.set(0.2, {action::attack, {0, 0}});
+
+				if(Game->is_PartyMember(next->who)){
+
+					if(Game->key_Pressed(SDL_SCANCODE_UP)){
+						cursor ++;
+
+						if(cursor >= actors.size())
+							cursor = 0;
+					}
+
+					if(Game->key_Pressed(SDL_SCANCODE_DOWN)){
+						cursor --;
+
+						if(cursor < 0)
+							cursor = actors.size()-1;
+					}
+
+					if(Game->key_Pressed(SDL_SCANCODE_SPACE)){
+						next->work.set(0.2, {action::attack, {0, 0}});
+					}
+				}
 			}
 
 			if(!next)
@@ -110,6 +135,7 @@ void battle::draw(game* Game){
 
 		case inputting_actions:
 			Game->draw_Text(0, 440, "INPUTTING_ACTIONS", "DotGothic16-Regular.ttf", 13);
+			Game->draw_Text(actors[cursor].position.x+64, actors[cursor].position.y, "<-", "DotGothic16-Regular.ttf", 26);
 			break;
 	}
 
@@ -141,7 +167,7 @@ void battle::draw(game* Game){
 
 		Game->draw_Text(
 			pos.x, pos.y + 64,
-			"Health" + std::to_string(actor.who->status.hp),
+			"Health" + std::to_string(actor.status.hp),
 			"DotGothic16-Regular.ttf",
 			13
 			);

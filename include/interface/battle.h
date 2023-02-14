@@ -21,6 +21,7 @@ struct action{
 
 struct actor{
 	character* who;
+	statistics status;
 	point position;
 	delay<action> work;
 };
