@@ -29,25 +29,25 @@ struct tuple_2{
 
 	template <class Tn>
 	tuple_2<T> operator*(const Tn& mult){
-		return tuple_2<T>{x * mult, y * mult};
+		return tuple_2<T>{static_cast<T>(x * mult), static_cast<T>(y * mult)};
 	}
 
 	template <class Tn>
 	tuple_2<T>& operator*=(const Tn& mult){
-		x *= mult;
-		y *= mult;
+		x = static_cast<T>(x * mult);
+		y = static_cast<T>(y * mult);
 		return *this;
 	}
 
 	template <class Tn>
 	tuple_2<T> operator/(const Tn& div){
-		return tuple_2<T>{x / div, y / div};
+		return tuple_2<T>{static_cast<T>(x / div), static_cast<T>(y / div)};
 	}
 
 	template <class Tn>
 	tuple_2<T>& operator/=(const Tn& div){
-		x /= div;
-		y /= div;
+		x = static_cast<T>(x / div);
+		y = static_cast<T>(y / div);
 		return *this;
 	}
 
