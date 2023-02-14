@@ -53,6 +53,17 @@ public:
 
 	void load_Party(std::string fname="");
 
+	/* Enemies */
+	struct enemies{
+		enum{
+			slime,
+			total
+		};
+	};
+	character Enemies[enemies::total];
+
+	void load_Enemies();
+
 	/* Movelist */
 	struct moves{
 		enum{
@@ -64,7 +75,7 @@ public:
 			total
 		};
 	};
-	move* Moves[moves::total];
+	move Moves[moves::total];
 
 	void load_Moves();
 

@@ -8,6 +8,9 @@ game::game(){
 	frames_per_second = 60;
 	delta_time = 0;
 	init();
+
+	load_Moves();
+	load_Enemies();
 }
 
 game::~game(){
@@ -46,7 +49,7 @@ void game::load_MessageBox(std::string section){
 }
 
 bool game::load_Battle(){
-	Battle.set();
+	Battle.set(this);
 
 	active_interfaces.push_front(&Battle);
 	run(&Battle);
@@ -145,3 +148,18 @@ void game::load_Party(std::string fname){
 		"WizardCat"
 	};
 }
+
+void game::load_Enemies(){
+	
+	Enemies[enemies::slime] = {
+		"data/textures/slime.png",
+		"Slime",
+		{100, 100},
+		{&Moves[moves::fire]}
+	};
+}
+
+void game::load_Moves(){
+
+}
+
