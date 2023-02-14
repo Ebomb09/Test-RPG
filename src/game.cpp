@@ -141,6 +141,26 @@ double game::delta_Time(){
 	return delta_time;
 }
 
+bool game::is_PartyMember(character* ch){
+
+	for(int i = 0; i < characters::maxpartysize; i ++){
+		if(Party[i] == ch)
+			return true;
+	}
+
+	return false;
+}
+
+bool game::is_Enemy(character* ch){
+
+	for(int i = 0; i < enemies::total; i ++){
+		if(&Enemies[i] == ch)
+			return true;
+	}
+
+	return false;
+}
+
 void game::load_Party(std::string fname){
 
 	Characters[characters::wizardcat] = {
@@ -154,7 +174,8 @@ void game::load_Enemies(){
 	Enemies[enemies::slime] = {
 		"data/textures/slime.png",
 		"Slime",
-		{100, 100},
+		{100},
+		{100},
 		{&Moves[moves::fire]}
 	};
 }

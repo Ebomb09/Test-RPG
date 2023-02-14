@@ -52,6 +52,7 @@ public:
 	character* Party[characters::maxpartysize];
 
 	void load_Party(std::string fname="");
+	bool is_PartyMember(character* ch);
 
 	/* Enemies */
 	struct enemies{
@@ -63,6 +64,7 @@ public:
 	character Enemies[enemies::total];
 
 	void load_Enemies();
+	bool is_Enemy(character* ch);
 
 	/* Movelist */
 	struct moves{
