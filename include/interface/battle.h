@@ -22,7 +22,7 @@ struct action{
 struct actor{
 	character* who;
 	point position;
-	delay<action> action;
+	delay<action> work;
 };
 
 struct battle : interface{

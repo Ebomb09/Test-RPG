@@ -16,7 +16,7 @@ void battle::set(game* Game){
 				Game->Party[i],
 				{320, 240}
 			};
-			player.action.set(0.5, {action::intro, {480 + i * 16 - 320, 64 + i * 80 - 240}});
+			player.work.set(0.5, {action::intro, {480 + i * 16 - 320, 64 + i * 80 - 240}});
 			actors.push_back(player);
 		}
 	}
@@ -25,7 +25,7 @@ void battle::set(game* Game){
 		&Game->Enemies[game::enemies::slime],
 		{16, 200}
 	};
-	enemy.action.set(1, {action::intro, {}});
+	enemy.work.set(1, {action::intro, {}});
 	actors.push_back(enemy);
 }
 
@@ -43,27 +43,27 @@ void battle::update(game* Game){
 
 			for(auto& actor : actors){
 
-				if(actor.action.done()){
+				if(actor.work.done()){
 
-					if(actor.action.get().type == action::intro)
-						actor.position += actor.action.get().transition;
+					if(actor.work.get().type == action::intro)
+						actor.position += actor.work.get().transition;
 
-					actor.action.reset();
+					actor.work.reset();
 				
 				}else{
 
-					if(actor.action.get().type == action::intro)
-						actor.action.increment(Game->delta_Time());
+					if(actor.work.get().type == action::intro)
+						actor.work.increment(Game->delta_Time());
 
-					if(!next || actor.who->stats.spd > next->who->stats.spd)
+					if(!next || actor.who->status.spd > next->who->status.spd)
 						next = &actor;
 				}
 			}
 
 			if(next){
 
-				if(next->action.get().type != action::intro)
-					next->action.increment(Game->delta_Time());
+				if(next->work.get().type != action::intro)
+					next->work.increment(Game->delta_Time());
 
 			}else{
 				mode = inputting_actions;
@@ -78,15 +78,15 @@ void battle::update(game* Game){
 
 			for(auto& actor : actors){
 
-				if(actor.action.done()){
+				if(actor.work.done()){
 
-					if(!next || actor.who->stats.spd > next->who->stats.spd)
+					if(!next || actor.who->status.spd > next->who->status.spd)
 						next = &actor;
 				}
 			}
 
 			if(next){
-				next->action.set(0.2, {action::attack, {0, 0}});
+				next->work.set(0.2, {action::attack, {0, 0}});
 			}
 
 			if(!next)
@@ -117,16 +117,16 @@ void battle::draw(game* Game){
 
 		point pos = actor.position;
 
-		switch(actor.action.get().type){
+		switch(actor.work.get().type){
 
 			case action::intro: {
-				pos += actor.action.get().transition * actor.action.percent();
-				pos.y -= 120 * std::sin(M_PI * actor.action.percent());
+				pos += actor.work.get().transition * actor.work.percent();
+				pos.y -= 120 * std::sin(M_PI * actor.work.percent());
 				break;
 			}
 
 			case action::attack:{
-				pos.x -= 30 * std::cos(M_PI * 1.5 + M_PI * actor.action.percent());
+				pos.x -= 30 * std::cos(M_PI * 1.5 + M_PI * actor.work.percent());
 				break;
 			}
 		}
@@ -141,7 +141,7 @@ void battle::draw(game* Game){
 
 		Game->draw_Text(
 			pos.x, pos.y + 64,
-			"Health" + std::to_string(actor.who->stats.hp),
+			"Health" + std::to_string(actor.who->status.hp),
 			"DotGothic16-Regular.ttf",
 			13
 			);
