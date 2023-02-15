@@ -165,7 +165,10 @@ void game::load_Party(std::string fname){
 
 	Characters[characters::wizardcat] = {
 		"data/textures/WizardCat.png", 
-		"WizardCat"
+		"WizardCat",
+		{100},
+		{100},
+		{&Moves[moves::attack], &Moves[moves::item], &Moves[moves::fire]}
 	};
 }
 
@@ -182,5 +185,29 @@ void game::load_Enemies(){
 
 void game::load_Moves(){
 
+	Moves[moves::attack] = {
+		"data/textures/attack.fx",
+		"Attack"
+	};
+
+	Moves[moves::item] = {
+		"data/textures/item.fx",
+		"Item"
+	};
+
+	Moves[moves::ice] = {
+		"data/textures/ice.fx",
+		"Ice"
+	};
+
+	Moves[moves::fire] = {
+		"data/textures/fire.fx",
+		"Fire"
+	};
+
+	Moves[moves::thunder] = {
+		"data/textures/ice.fx",
+		"Thunder"
+	};
 }
 
