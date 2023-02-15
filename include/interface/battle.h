@@ -12,7 +12,7 @@ struct action{
 
 	enum{
 		none,
-		intro,
+		move,
 		attack
 	};
 	int type = none;
@@ -28,7 +28,23 @@ struct actor{
 
 struct battle : interface{
 
-	int cursor;
+	struct cursor{
+		enum{
+			none,
+			select_attack,
+			select_target
+		};
+		int mode;
+		int position;
+		int attack;
+		int target;
+	}curse;
+
+	void select_Cursor();
+	void return_Cursor();
+	void move_Cursor(point transition);
+	void reset_Cursor(int mode, int position=0);
+	void draw_Cursor(game* Game);
 
 	enum{
 		waiting_to_complete,
@@ -36,6 +52,7 @@ struct battle : interface{
 	};
 	int mode;
 
+	actor* next;
 	std::vector<actor> actors;
 
 	void set(game* Game);
