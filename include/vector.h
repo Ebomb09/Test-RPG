@@ -1,6 +1,8 @@
 #ifndef GAME_VECTOR_H
 #define GAME_VECTOR_H
 
+#include <cmath>
+
 template <class T>
 struct tuple_2{
 
@@ -57,6 +59,10 @@ struct tuple_2{
 
 	bool operator!=(const tuple_2& comp){
 		return (x != comp.x || y != comp.y);
+	}
+
+	T distance(){
+		return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
 	}
 };
 
