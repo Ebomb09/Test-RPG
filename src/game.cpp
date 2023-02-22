@@ -48,8 +48,8 @@ void game::load_MessageBox(std::string section){
 	run(&MessageBox);
 }
 
-bool game::load_Battle(){
-	Battle.set(this, {320, 240});
+bool game::load_Battle(point position){
+	Battle.set(this, position);
 
 	active_interfaces.push_front(&Battle);
 	run(&Battle);

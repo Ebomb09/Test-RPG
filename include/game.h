@@ -87,7 +87,7 @@ public:
 	std::string load_InputBox(std::string prompt, std::string default_string="", int limit=32);
 	void load_WorldMap(std::string map);
 	int load_PartyPosition(character* ch);
-	bool load_Battle();
+	bool load_Battle(point position);
 	void load_Return();
 
 	/* Game control */
