@@ -13,6 +13,6 @@ void encounter::draw(game* Game, worldmap* World){
 }
 
 bool encounter::interact(game* Game, worldmap* World){
-	Game->load_Battle();
+	Game->load_Battle(position * 64);
 	return true;
 }

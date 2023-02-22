@@ -298,6 +298,7 @@ void battle::update(game* Game){
 					if(Game->key_Pressed(SDL_SCANCODE_ESCAPE))
 						return_Cursor();
 
+				// Default action set for non-controllable actors
 				}else{
 					next->work.set(0.5, {action::attack});
 				}
@@ -312,6 +313,8 @@ void battle::update(game* Game){
 }
 
 void battle::draw(game* Game){
+
+	Game->clear_Buffer(255, 255, 255, 255);
 
 	switch(mode){
 
@@ -334,17 +337,29 @@ void battle::draw(game* Game){
 
 		point pos = actor.position;
 
-		switch(actor.work.get().type){
+		// If actor is next actionable
+		if(next == &actor && mode == waiting_to_complete){
 
-			case action::move: {
-				pos += actor.work.get().transition * actor.work.percent();
-				pos.y -= 120 * std::sin(M_PI * actor.work.percent());
-				break;
-			}
+			switch(actor.work.get().type){
 
-			case action::attack:{
-				pos.x -= 30 * std::cos(M_PI * 1.5 + M_PI * actor.work.percent());
-				break;
+				case action::move: {
+					pos += actor.work.get().transition * actor.work.percent();
+					pos.y -= 120 * std::sin(M_PI * actor.work.percent());
+					break;
+				}
+
+				case action::attack:{
+					point target = actors[actor.work.get().target].position;
+
+					pos.x -= 30 * std::cos(M_PI * 1.5 + M_PI * actor.work.percent());
+					Game->draw_Text(
+						target.x, target.y - 50 * actor.work.percent(),
+						"-" + std::to_string(10),
+						"DotGothic16-Regular.ttf",
+						26
+						);
+					break;
+				}
 			}
 		}
 
@@ -363,6 +378,4 @@ void battle::draw(game* Game){
 			13
 			);
 	}
-
-
 }
