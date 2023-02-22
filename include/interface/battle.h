@@ -17,6 +17,7 @@ struct action{
 	};
 	int type = none;
 	point transition;
+	int target;
 };
 
 struct actor{
@@ -55,7 +56,9 @@ struct battle : interface{
 	actor* next;
 	std::vector<actor> actors;
 
-	void set(game* Game);
+	point start;
+
+	void set(game* Game, point pos);
 	bool get();
 
 	void update(game* Game);

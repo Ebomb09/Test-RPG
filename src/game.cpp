@@ -49,7 +49,7 @@ void game::load_MessageBox(std::string section){
 }
 
 bool game::load_Battle(){
-	Battle.set(this);
+	Battle.set(this, {320, 240});
 
 	active_interfaces.push_front(&Battle);
 	run(&Battle);

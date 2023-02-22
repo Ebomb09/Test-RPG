@@ -2,8 +2,9 @@
 #include "game.h"
 #include <cmath>
 
-void battle::set(game* Game){
+void battle::set(game* Game, point pos){
 
+	start = pos;
 	mode = waiting_to_complete;
 
 	actors.clear();
@@ -14,13 +15,14 @@ void battle::set(game* Game){
 			actor player = {
 				Game->Party[0],
 				Game->Party[0]->status,
-				{320, 240}
+				start
 			};
-			player.work.set(0.25, {action::move, {480 + i * 16 - 320, 64 + i * 80 - 240}});
+			player.work.set(0.25, {action::move, {480 + i * 16 - start.x, 64 + i * 80 - start.y}});
 			actors.push_back(player);
 		}
 	}
 
+	/* Test Single Slime Enemy */
 	actor enemy = {
 		&Game->Enemies[game::enemies::slime],
 		Game->Enemies[game::enemies::slime].stats,
@@ -34,11 +36,13 @@ bool battle::get(){
 	return true;
 }
 
+/* Reset cursor to position and select mode */
 void battle::reset_Cursor(int mode, int position){
 	curse.mode = mode;
 	curse.position = position;
 }
 
+/* Return cursor to previous step */
 void battle::return_Cursor(){
 
 	if(!next)
@@ -53,6 +57,7 @@ void battle::return_Cursor(){
 	}	
 }
 
+/* Create commands based on cursors current position */
 void battle::select_Cursor(){
 
 	if(!next)
@@ -63,13 +68,17 @@ void battle::select_Cursor(){
 		case cursor::select_attack: {
 			curse.attack = curse.position;
 
-			reset_Cursor(curse.select_target);
+			reset_Cursor(cursor::select_target);
 			break;
 		}
 
 		case cursor::select_target: {
 			curse.target = curse.position;
-			next->work.set(0.5, {action::attack, {}});
+
+			action attack = {action::attack};
+			attack.target = curse.target;
+
+			next->work.set(0.5, attack);
 
 			reset_Cursor(cursor::select_attack);
 			break;
@@ -77,6 +86,7 @@ void battle::select_Cursor(){
 	}	
 }
 
+/* Move cursor based on current status of selection */
 void battle::move_Cursor(point transition){
 
 	if(!next)
@@ -135,6 +145,7 @@ void battle::move_Cursor(point transition){
 	}
 }
 
+/* Draw cursor mode */
 void battle::draw_Cursor(game* Game){
 
 	if(!next || !Game->is_PartyMember(next->who))
@@ -193,9 +204,24 @@ void battle::update(game* Game){
 
 				if(actor.work.done()){
 
-					if(actor.work.get().type == action::move)
-						actor.position += actor.work.get().transition;
+					// Work done so do whatever queued action
+					switch(actor.work.get().type){
 
+						// Change position
+						case action::move: {
+							actor.position += actor.work.get().transition;
+							break;
+						}
+
+						// Affect target with selected command
+						case action::attack:{
+
+							statistics* status = &actors[actor.work.get().target].status;
+							status->hp -= 10;
+
+							break;
+						}
+					}
 					actor.work.reset();
 				
 				}else if(!next || actor.who->status.spd > next->who->status.spd){
@@ -206,10 +232,33 @@ void battle::update(game* Game){
 			if(next){
 				next->work.increment(Game->delta_Time());
 
+			//Go to next step
 			}else{
 				reset_Cursor(cursor::select_attack);
 				mode = inputting_actions;
 			}
+
+			//Remove any fallen members of battle
+			for(int i = 0; i < actors.size(); i ++){
+
+				if(actors[i].status.hp <= 0)
+					actors.erase(actors.begin()+i);
+			}
+
+			// Check if win/lose condition is met
+			bool lost = true;
+			bool win = true;
+
+			for(int i = 0; i < actors.size(); i ++){
+
+				if(Game->is_PartyMember(actors[i].who))
+					lost = false;
+				else
+					win = false;
+			}
+
+			if(lost || win || Game->key_Pressed(SDL_SCANCODE_LCTRL))
+				Game->load_Return();
 
 			break;
 		}
@@ -260,21 +309,6 @@ void battle::update(game* Game){
 			break;
 		} 
 	}
-
-	// Check if there are any party members left
-	bool lost = true;
-	bool win = true;
-
-	for(int i = 0; i < actors.size(); i ++){
-
-		if(Game->is_PartyMember(actors[i].who))
-			lost = false;
-		else
-			win = false;
-	}
-
-	if(lost || win || Game->key_Pressed(SDL_SCANCODE_LCTRL))
-		Game->load_Return();
 }
 
 void battle::draw(game* Game){
