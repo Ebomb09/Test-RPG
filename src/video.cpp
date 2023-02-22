@@ -193,3 +193,8 @@ bool video::draw_Rectangle(int x, int y, int w, int h){
 	SDL_Rect rect = {x, y, w, h};
 	return (SDL_RenderDrawRect(Renderer, &rect) == 0);
 }
+
+bool video::draw_FillRectangle(int x, int y, int w, int h){
+	SDL_Rect rect = {x, y, w, h};
+	return (SDL_RenderFillRect(Renderer, &rect) == 0);
+}

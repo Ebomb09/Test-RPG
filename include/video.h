@@ -24,16 +24,18 @@ protected:
 
 	bool init();
 	bool create_Window(const char* name, int width, int height);
-	bool swap_Buffer();
-	bool clear_Buffer(int r, int g, int b, int a);
 
 public:
 	~video();
+
+	bool swap_Buffer();
+	bool clear_Buffer(int r, int g, int b, int a);
 
 	bool draw_Colour(int r, int g, int b, int a);
 
 	bool draw_Line(int x1, int y1, int x2, int y2);
 	bool draw_Rectangle(int x, int y, int w, int h);
+	bool draw_FillRectangle(int x, int y, int w, int h);
 
 	bool draw_Text(int x, int y, std::string text, std::string fontname, int ptsize);
 	bool draw_TextClip(int x, int y, int w, int h, std::string text, std::string fontname, int ptsize);
