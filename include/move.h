@@ -8,6 +8,9 @@ struct move{
 	std::string asset;
 	std::string name;
 	statistics scaling;
+	statistics effects;
+
+	void deal(statistics* from, statistics* to);
 };
 
 #endif

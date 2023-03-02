@@ -4,20 +4,28 @@
 #include "interface/base.h"
 #include "character.h"
 #include "delay.h"
+#include "move.h"
 #include "vector.h"
 
 #include <vector>
+
+struct actor;
 
 struct action{
 
 	enum{
 		none,
-		move,
+		transition,
 		attack
 	};
 	int type = none;
-	point transition;
-	int target;
+
+	/* Move */
+	point where;
+
+	/* Attack */
+	actor* target;
+	move* command;
 };
 
 struct actor{
@@ -25,6 +33,11 @@ struct actor{
 	statistics status;
 	point position;
 	delay<action> work;
+	int team;
+
+	actor(character* _who, statistics _status, point _position, int _team);
+
+	void act();
 };
 
 struct battle : interface{
@@ -37,7 +50,7 @@ struct battle : interface{
 		};
 		int mode;
 		int position;
-		int attack;
+		int command;
 		int target;
 	}curse;
 
@@ -57,6 +70,8 @@ struct battle : interface{
 	std::vector<actor> actors;
 
 	point start;
+
+	int get_IndexFirstFromTeam(int team);
 
 	void set(game* Game, point pos);
 	bool get();

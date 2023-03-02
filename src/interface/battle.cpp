@@ -12,34 +12,93 @@ void battle::set(game* Game, point pos){
 	for(int i = 0; i < game::characters::maxpartysize; i ++){
 
 		if(Game->Party[0]){
-			actor player = {
-				Game->Party[0],
-				Game->Party[0]->status,
-				start
-			};
-			player.work.set(0.25, {action::move, {480 + i * 16 - start.x, 64 + i * 80 - start.y}});
+			actor player(
+				Game->Party[0], 
+				Game->Party[0]->status, 
+				start, 
+				0
+			);
+
+			// Define where player positions are
+			action plyPos;
+			plyPos.type = action::transition;
+			plyPos.where = {480 + i * 16, 64 + i * 80};
+
+			player.work.set(0.25, plyPos);
 			actors.push_back(player);
 		}
 	}
 
 	/* Test Single Slime Enemy */
-	actor enemy = {
+	actor enemy(
 		&Game->Enemies[game::enemies::slime],
 		Game->Enemies[game::enemies::slime].stats,
-		{16, 200}
-	};
-	enemy.work.set(0.25, {action::move, {}});
+		{-200,240},
+		1
+	);
+
+	action enmPos;
+	enmPos.type = action::transition;
+	enmPos.where = {16, 200};
+
+	enemy.work.set(0.25, enmPos);
 	actors.push_back(enemy);
 }
 
+/* Get battle status / who won */
 bool battle::get(){
 	return true;
+}
+
+/* Copy value constructor */
+actor::actor(character* _who, statistics _status, point _position, int _team){
+	who = _who;
+	status = _status;
+	position = _position;
+	team = _team;
+}
+
+/* Prcess the Actor's Work */
+void actor::act(){
+
+	// Work done so do whatever queued action
+	switch(work.get().type){
+
+		// Change position
+		case action::transition: {
+			position = work.get().where;
+			break;
+		}
+
+		// Affect target with selected command
+		case action::attack:{
+
+			// TODO: Change how stats are increased / decreased based on the moves statistics
+			statistics* status = &work.get().target->status;
+			status->hp -= 10;
+
+			break;
+		}
+	}
+}
+
+int battle::get_IndexFirstFromTeam(int team){
+
+	for(int i = 0; i < actors.size(); i ++)
+		if(actors[i].team == team)
+			return i;
+
+	return -1;
 }
 
 /* Reset cursor to position and select mode */
 void battle::reset_Cursor(int mode, int position){
 	curse.mode = mode;
 	curse.position = position;
+
+	// Default to first enemy when selecting target
+	if(mode == cursor::select_target)
+		curse.position = get_IndexFirstFromTeam(1);
 }
 
 /* Return cursor to previous step */
@@ -51,7 +110,7 @@ void battle::return_Cursor(){
 	switch(curse.mode){
 
 		case cursor::select_target: {
-			reset_Cursor(cursor::select_attack, curse.attack);
+			reset_Cursor(cursor::select_attack, curse.command);
 			break;
 		}
 	}	
@@ -66,7 +125,7 @@ void battle::select_Cursor(){
 	switch(curse.mode){
 
 		case cursor::select_attack: {
-			curse.attack = curse.position;
+			curse.command = curse.position;
 
 			reset_Cursor(cursor::select_target);
 			break;
@@ -75,8 +134,10 @@ void battle::select_Cursor(){
 		case cursor::select_target: {
 			curse.target = curse.position;
 
-			action attack = {action::attack};
-			attack.target = curse.target;
+			action attack;
+			attack.type = action::attack;
+			attack.target = &actors[curse.target];
+			attack.command = actors[curse.target].who->learned_moves[curse.command];
 
 			next->work.set(0.5, attack);
 
@@ -151,6 +212,9 @@ void battle::draw_Cursor(game* Game){
 	if(!next || !Game->is_PartyMember(next->who))
 		return;
 
+	Game->draw_Colour(255, 0, 0, 255);
+	Game->draw_Rectangle(next->position.x, next->position.y, 64, 64);
+
 	switch(curse.mode){
 		
 		case cursor::select_attack: {
@@ -203,25 +267,7 @@ void battle::update(game* Game){
 			for(auto& actor : actors){
 
 				if(actor.work.done()){
-
-					// Work done so do whatever queued action
-					switch(actor.work.get().type){
-
-						// Change position
-						case action::move: {
-							actor.position += actor.work.get().transition;
-							break;
-						}
-
-						// Affect target with selected command
-						case action::attack:{
-
-							statistics* status = &actors[actor.work.get().target].status;
-							status->hp -= 10;
-
-							break;
-						}
-					}
+					actor.act();
 					actor.work.reset();
 				
 				}else if(!next || actor.who->status.spd > next->who->status.spd){
@@ -245,19 +291,11 @@ void battle::update(game* Game){
 					actors.erase(actors.begin()+i);
 			}
 
-			// Check if win/lose condition is met
-			bool lost = true;
-			bool win = true;
+			// Query if there are anymore heroes / enemies alive
+			int qHero = get_IndexFirstFromTeam(0);
+			int qEnemy = get_IndexFirstFromTeam(1);
 
-			for(int i = 0; i < actors.size(); i ++){
-
-				if(Game->is_PartyMember(actors[i].who))
-					lost = false;
-				else
-					win = false;
-			}
-
-			if(lost || win || Game->key_Pressed(SDL_SCANCODE_LCTRL))
+			if(qHero == -1 || qEnemy == -1 || Game->key_Pressed(SDL_SCANCODE_LCTRL))
 				Game->load_Return();
 
 			break;
@@ -300,7 +338,10 @@ void battle::update(game* Game){
 
 				// Default action set for non-controllable actors
 				}else{
-					next->work.set(0.5, {action::attack});
+					action defAttack;
+					defAttack.type = action::attack;
+					defAttack.target = &actors[0];
+					next->work.set(0.5, defAttack);
 				}
 
 			}else{
@@ -325,11 +366,6 @@ void battle::draw(game* Game){
 		case inputting_actions:
 			Game->draw_Text(0, 440, "INPUTTING_ACTIONS", "DotGothic16-Regular.ttf", 13);
 			draw_Cursor(Game);
-
-			if(next){
-				Game->draw_Colour(255, 0, 0, 255);
-				Game->draw_Rectangle(next->position.x, next->position.y, 64, 64);
-			}
 			break;
 	}
 
@@ -342,14 +378,14 @@ void battle::draw(game* Game){
 
 			switch(actor.work.get().type){
 
-				case action::move: {
-					pos += actor.work.get().transition * actor.work.percent();
+				case action::transition: {
+					pos += (actor.work.get().where - pos) * actor.work.percent();
 					pos.y -= 120 * std::sin(M_PI * actor.work.percent());
 					break;
 				}
 
 				case action::attack:{
-					point target = actors[actor.work.get().target].position;
+					point target = actor.work.get().target->position;
 
 					pos.x -= 30 * std::cos(M_PI * 1.5 + M_PI * actor.work.percent());
 					Game->draw_Text(

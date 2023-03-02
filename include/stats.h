@@ -2,12 +2,12 @@
 #define GAME_STATS_H
 
 struct statistics{
-	int hp;
-	int str;
-	int mag;
-	int vit;
-	int spr;
-	int spd;
+	double hp  = 0;
+	double str = 0;
+	double mag = 0;
+	double vit = 0;
+	double spr = 0;
+	double spd = 0;
 };
 
 #endif
