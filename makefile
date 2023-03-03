@@ -8,7 +8,7 @@ endif
 SOURCES = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJECTS = $(SOURCES:src/%.cpp=obj/%.o)
 
-DEPS = deps/interface-dialogue
+DEPS = deps/Interface-Dialogue
 INCLUDES = -Iinclude $(shell pkg-config sdl2 SDL2_ttf SDL2_image SDL2_mixer --cflags) -I$(DEPS:=/include)
 LIBS = $(shell pkg-config sdl2 SDL2_ttf SDL2_image SDL2_mixer --libs) -L$(DEPS:=/lib) -ldialogue
 CPPFLAGS := -std=c++14
@@ -34,5 +34,5 @@ obj/%.o: src/%.cpp $(wildcard include/%.h)
 
 deps/%:
 	@mkdir -p deps
-	git clone git@ebomb.asuscomm.com:repos/$(@F).git $@ && \
-	cd $@ && $(MAKE) init && $(MAKE)
+	git clone git@github.com:Ebomb09/$(@F).git $@ && \
+	cd $@ && $(MAKE)
