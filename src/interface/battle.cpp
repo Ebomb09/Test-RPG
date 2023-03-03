@@ -11,10 +11,10 @@ void battle::set(game* Game, point pos){
 
 	for(int i = 0; i < characters::maxpartysize; i ++){
 
-		if(Game->Party[0]){
+		if(Game->Party[i]){
 			actor player(
-				Game->Party[0], 
-				Game->Party[0]->status, 
+				Game->Party[i], 
+				Game->Party[i]->status, 
 				start, 
 				0
 			);

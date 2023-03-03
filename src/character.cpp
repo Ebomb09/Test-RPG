@@ -6,6 +6,7 @@ character::character(std::string _name, std::string _asset,
 		std::vector<move*> _compatible
 		){
 	name = _name;
+	defined_name = _name;
 	asset = _asset;
 	stats = _stats;
 	status = _stats;

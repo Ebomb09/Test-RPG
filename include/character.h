@@ -9,6 +9,7 @@
 struct character{
 	std::string asset;
 	std::string name;
+	std::string defined_name;
 
 	statistics status;	// Current stats
 	statistics stats;	// Overall(max) stats

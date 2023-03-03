@@ -4,6 +4,7 @@
 void partyposition::set(character* ch){
 	select = ch;
 	position = 0;
+	faded.set(1, true);
 }
 
 int partyposition::get(){
@@ -12,47 +13,71 @@ int partyposition::get(){
 
 void partyposition::update(game* Game){
 
-	if(Game->key_Pressed(SDL_SCANCODE_UP)){
+	if(faded.get()){
+		if(Game->key_Pressed(SDL_SCANCODE_UP)){
 
-		position --;
+			position --;
 
-		if(position < 0)
-			position = characters::maxpartysize-1;
-	}
-
-	if(Game->key_Pressed(SDL_SCANCODE_DOWN)){
-
-		position ++;
-
-		if(position >= characters::maxpartysize)
-			position = 0;
-	}
-
-	if(Game->key_Pressed(SDL_SCANCODE_SPACE)){
-
-		if(select){
-
-			// Swap if the selected character is already in the party
-			for(int i = 0; i < characters::maxpartysize; i ++){
-
-				if(i != position && Game->Party[i] == select){
-					Game->Party[i] = Game->Party[position];
-					break;
-				}
-			}
+			if(position < 0)
+				position = characters::maxpartysize-1;
 		}
 
-		Game->Party[position] = select;
-		Game->load_Return();
+		if(Game->key_Pressed(SDL_SCANCODE_DOWN)){
+
+			position ++;
+
+			if(position >= characters::maxpartysize)
+				position = 0;
+		}
+
+		if(Game->key_Pressed(SDL_SCANCODE_SPACE)){
+
+			if(select){
+
+				// Swap if the selected character is already in the party
+				for(int i = 0; i < characters::maxpartysize; i ++){
+
+					if(i != position && Game->Party[i] == select){
+						Game->Party[i] = Game->Party[position];
+						break;
+					}
+				}
+			}
+
+			Game->Party[position] = select;
+			faded.set(1, false);
+		}
 	}
 
 	if(Game->key_Pressed(SDL_SCANCODE_ESCAPE)){
 		position = -1;
-		Game->load_Return();
+		faded.set(1, false);
 	}
+
+	// Done fading so return
+	if(faded.done() && !faded.get())
+		Game->load_Return();
+
+	faded.increment(Game->delta_Time());
 }
 
 void partyposition::draw(game* Game){
+
+	if(faded.done() && faded.get()){
+		Game->clear_Buffer(255, 255, 255, 255);
+
+	}else{
+
+		if(faded.get()){
+			Game->draw_Colour(255, 255, 255, 255 * faded.percent());
+			Game->draw_FillRectangle(0, 0, 640, 480);
+
+		}else{
+			Game->draw_Colour(255, 255, 255, 255 - 255 * faded.percent());
+			Game->draw_FillRectangle(0, 0, 640, 480);
+			return;
+		}
+	}
 
 	Game->draw_Text(320, 32, "Make your party", "DotGothic16-Regular.ttf", 24);
 

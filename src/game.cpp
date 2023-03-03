@@ -33,6 +33,7 @@ void game::init(){
 }
 
 void game::load_Return(){
+
 	active_interfaces.pop_front();
 }
 
@@ -43,33 +44,36 @@ void game::load_MainMenu(){
 
 void game::load_MessageBox(std::string section){
 	MessageBox.gotoSection(section.c_str());
-
 	active_interfaces.push_front(&MessageBox);
+
 	run(&MessageBox);
 }
 
 bool game::load_Battle(point position){
-	Battle.set(this, position);
 
+	Battle.set(this, position);
 	active_interfaces.push_front(&Battle);
+
 	run(&Battle);
 
 	return Battle.get();
 }
 
-std::string game::load_InputBox(std::string prompt, std::string default_string, int limit){
-	InputBox.set(this, prompt, default_string, limit);
+std::string game::load_InputBox(std::string prompt, std::string default_string, std::string icon, int limit){
 
+	InputBox.set(this, prompt, default_string, limit, icon);
 	active_interfaces.push_front(&InputBox);
+
 	run(&InputBox);
 
 	return get_string();
 }
 
 int game::load_PartyPosition(character* ch){
-	PartyPosition.set(ch);
 
+	PartyPosition.set(ch);
 	active_interfaces.push_front(&PartyPosition);
+
 	run(&PartyPosition);
 
 	return PartyPosition.get();
@@ -80,6 +84,14 @@ void game::load_WorldMap(std::string map){
 
 	active_interfaces.clear();
 	active_interfaces.push_front(&WorldMap);
+}
+
+interface* game::front_Interface(){
+
+	if(active_interfaces.size() > 0)
+		return active_interfaces.front();
+
+	return NULL;
 }
 
 void game::run(interface* watch){

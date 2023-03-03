@@ -8,30 +8,33 @@ void messagebox::proceed(){
 
 void messagebox::check(game* Game){
 
-	// Check dialogue variables set that we want to
-	// track. Such as items, characters, teleports, etc.
-
-	if(getvar("join_WizardCat") == 1){
-		assign("join_WizardCat", 0);
-		Game->Characters[characters::wizardcat].name = Game->load_InputBox("Name your character", Game->Characters[characters::wizardcat].name);
-		Game->load_PartyPosition(&Game->Characters[characters::wizardcat]);
-	}
-
 	// Set the built-in variables
-
 	int size = 0;
-	int wizardcat = 0;
-	for(int i = 0; i < characters::maxpartysize; i ++){
 
-		if(Game->Party[i])
+	for(int i = 0; i < characters::total; i ++){
+
+		// Default initialization character name
+		std::string name = Game->Characters[i].defined_name;
+
+		// Check if the party member has requested to join
+		if(getvar(("join_" + name).c_str()) == 1){
+			assign(("join_" + name).c_str(), 0);
+			Game->Characters[i].name = Game->load_InputBox("Name your character", name, Game->Characters[i].asset, 32);
+			Game->load_PartyPosition(&Game->Characters[i]);
+		}
+
+		// Check if character is a member of the party
+		if(Game->is_PartyMember(&Game->Characters[i])){
 			size++;
+			assign(("in_party_" + name).c_str(), 1);
 
-		if(Game->Party[i] == &Game->Characters[characters::wizardcat])
-			wizardcat = 1;
+		}else{
+			assign(("in_party_" + name).c_str(), 0);
+		}
 	}
 
+	// Assign the built-in variables
 	assign("party_size", size);
-	assign("in_party_WizardCat", wizardcat);
 }
 
 void messagebox::update(game* Game){
@@ -76,6 +79,12 @@ void messagebox::update(game* Game){
 }
 
 void messagebox::draw(game* Game){
+
+	if(Game->front_Interface() != this)
+		return;
+
+	Game->draw_Colour(128, 0, 255, 128);
+	Game->draw_FillRectangle(0, 240, 640, 240);
 
 	switch(current()){
 

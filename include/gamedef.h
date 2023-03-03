@@ -4,6 +4,8 @@
 struct characters{
 	enum{
 		wizardcat,
+		dragonknight,
+		fireguy,
 		total,
 		maxpartysize = 4
 	};

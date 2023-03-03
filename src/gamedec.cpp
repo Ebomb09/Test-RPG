@@ -6,6 +6,20 @@ void game::load_Party(std::string fname){
 		"WizardCat",
 		"data/textures/WizardCat.png", 
 		{100, 5, 10, 2, 4, 10},
+		{&Moves[moves::attack], &Moves[moves::item], &Moves[moves::thunder]}
+	);
+
+	Characters[characters::dragonknight] = character(
+		"DragonKnight",
+		"data/textures/DragonKnight.png", 
+		{100, 12, 4, 10, 5, 10},
+		{&Moves[moves::attack], &Moves[moves::item], &Moves[moves::fire]}
+	);
+
+	Characters[characters::fireguy] = character(
+		"FireGuy",
+		"data/textures/FireGuy.png", 
+		{100, 1, 20, 5, 5, 20},
 		{&Moves[moves::attack], &Moves[moves::item], &Moves[moves::fire]}
 	);
 }
