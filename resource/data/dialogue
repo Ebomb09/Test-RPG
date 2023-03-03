@@ -17,3 +17,31 @@ join = options("I remember..." "I don't remember.")
 
 if("join" "==" "0")
 	assign("join_WizardCat" "1")
+
+[Select-DragonKnight]
+DragonKnight: "What are you staring at"
+DragonKnight: "Do I know you?"
+
+if("in_party_DragonKnight" "==" "1")
+	exit()
+
+???: "I think I know who this is"
+join = options("I remember..." "I don't remember.")
+
+if("join" "==" "0")
+	assign("join_DragonKnight" "1")
+
+[Select-FireGuy]
+FireGuy: "hsfugh hfsssshg"
+FireGuy: "You get me?"
+
+if("in_party_FireGuy" "==" "1")
+	exit()
+
+???: "Uh..."
+???: "I don't think"
+???: "Or maybe I do"
+join = options("I remember..." "I don't remember")
+
+if("join" "==" "0")
+	assign("join_FireGuy" "1")

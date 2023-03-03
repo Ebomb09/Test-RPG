@@ -1,4 +1,6 @@
 player 		0	0
 npc			2	0	Intro
 npc			4	0	Select-WizardCat
+npc			4	4	Select-DragonKnight
 encounter	2	2	
+npc			0	5	Select-FireGuy
