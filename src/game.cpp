@@ -19,7 +19,7 @@ game::~game(){
 
 void game::init(){
 
-	for(int i = 0; i < game::characters::maxpartysize; i ++)
+	for(int i = 0; i < characters::maxpartysize; i ++)
 		Party[i] = NULL;
 
 	MessageBox.openFile("data/dialogue");
@@ -160,54 +160,3 @@ bool game::is_Enemy(character* ch){
 
 	return false;
 }
-
-void game::load_Party(std::string fname){
-
-	Characters[characters::wizardcat] = {
-		"data/textures/WizardCat.png", 
-		"WizardCat",
-		{100},
-		{100},
-		{&Moves[moves::attack], &Moves[moves::item], &Moves[moves::fire]}
-	};
-}
-
-void game::load_Enemies(){
-	
-	Enemies[enemies::slime] = {
-		"data/textures/slime.png",
-		"Slime",
-		{100},
-		{100},
-		{&Moves[moves::fire]}
-	};
-}
-
-void game::load_Moves(){
-
-	Moves[moves::attack] = {
-		"data/textures/attack.fx",
-		"Attack"
-	};
-
-	Moves[moves::item] = {
-		"data/textures/item.fx",
-		"Item"
-	};
-
-	Moves[moves::ice] = {
-		"data/textures/ice.fx",
-		"Ice"
-	};
-
-	Moves[moves::fire] = {
-		"data/textures/fire.fx",
-		"Fire"
-	};
-
-	Moves[moves::thunder] = {
-		"data/textures/ice.fx",
-		"Thunder"
-	};
-}
-

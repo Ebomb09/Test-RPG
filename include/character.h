@@ -9,10 +9,18 @@
 struct character{
 	std::string asset;
 	std::string name;
-	statistics stats;
-	statistics status;
+
+	statistics status;	// Current stats
+	statistics stats;	// Overall(max) stats
+
 	std::vector<move*> learned_moves;
 	std::vector<move*> compatible_moves; 
+
+	character(std::string _name = "", std::string _asset = "",
+		statistics _stats = {},
+		std::vector<move*> _learn = {},
+		std::vector<move*> _compatible = {}
+		);
 };
 
 #endif 

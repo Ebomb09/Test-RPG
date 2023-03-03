@@ -9,7 +9,7 @@ void battle::set(game* Game, point pos){
 
 	actors.clear();
 
-	for(int i = 0; i < game::characters::maxpartysize; i ++){
+	for(int i = 0; i < characters::maxpartysize; i ++){
 
 		if(Game->Party[0]){
 			actor player(
@@ -31,8 +31,8 @@ void battle::set(game* Game, point pos){
 
 	/* Test Single Slime Enemy */
 	actor enemy(
-		&Game->Enemies[game::enemies::slime],
-		Game->Enemies[game::enemies::slime].stats,
+		&Game->Enemies[enemies::slime],
+		Game->Enemies[enemies::slime].stats,
 		{-200,240},
 		1
 	);
@@ -71,23 +71,38 @@ void actor::act(){
 		}
 
 		// Affect target with selected command
-		case action::attack:{
+		case action::attack: {
 
-			// TODO: Change how stats are increased / decreased based on the moves statistics
-			statistics* status = &work.get().target->status;
-			status->hp -= 10;
+			// Error Check pointers valid
+			if(!work.get().command){
+				std::cerr << "Error: Invalid move selected\n";
+				return;
+			}
+
+			if(!work.get().target){
+				std::cerr << "Error: Invalid target selected\n";
+				return;			
+			}
+
+			work.get().command->deal(&status, &work.get().target->status);
+
+			std::cout << who->name << " used " << work.get().command->name << '\n'; 
 
 			break;
 		}
 	}
+
+	work.reset();
 }
 
+/* Get first indexed character on team IF still alive */
 int battle::get_IndexFirstFromTeam(int team){
 
 	for(int i = 0; i < actors.size(); i ++)
-		if(actors[i].team == team)
+		if(actors[i].team == team && actors[i].status.hp > 0)
 			return i;
 
+	std::cerr << "Error: No members of team " << team << " alive or found\n";
 	return -1;
 }
 
@@ -137,7 +152,7 @@ void battle::select_Cursor(){
 			action attack;
 			attack.type = action::attack;
 			attack.target = &actors[curse.target];
-			attack.command = actors[curse.target].who->learned_moves[curse.command];
+			attack.command = next->who->learned_moves[curse.command];
 
 			next->work.set(0.5, attack);
 
@@ -266,15 +281,20 @@ void battle::update(game* Game){
 
 			for(auto& actor : actors){
 
+				// Do not deal with the dead actors
+				if(actor.status.hp <= 0)
+					continue;
+
+				// Act upon once complete or attempt speed check
 				if(actor.work.done()){
 					actor.act();
-					actor.work.reset();
 				
 				}else if(!next || actor.who->status.spd > next->who->status.spd){
 					next = &actor;
 				}
 			}
 
+			// Allow actor time to do given work
 			if(next){
 				next->work.increment(Game->delta_Time());
 
@@ -282,13 +302,6 @@ void battle::update(game* Game){
 			}else{
 				reset_Cursor(cursor::select_attack);
 				mode = inputting_actions;
-			}
-
-			//Remove any fallen members of battle
-			for(int i = 0; i < actors.size(); i ++){
-
-				if(actors[i].status.hp <= 0)
-					actors.erase(actors.begin()+i);
 			}
 
 			// Query if there are anymore heroes / enemies alive
@@ -306,6 +319,10 @@ void battle::update(game* Game){
 			next = NULL;
 
 			for(auto& actor : actors){
+
+				// Do not deal with the dead actors
+				if(actor.status.hp <= 0)
+					continue;
 
 				if(actor.work.done()){
 
@@ -341,6 +358,7 @@ void battle::update(game* Game){
 					action defAttack;
 					defAttack.type = action::attack;
 					defAttack.target = &actors[0];
+					defAttack.command = &Game->Moves[moves::ice];
 					next->work.set(0.5, defAttack);
 				}
 
@@ -369,28 +387,34 @@ void battle::draw(game* Game){
 			break;
 	}
 
-	for(auto& actor : actors){
+	for(auto& it : actors){
 
-		point pos = actor.position;
+		point pos = it.position;
 
 		// If actor is next actionable
-		if(next == &actor && mode == waiting_to_complete){
+		if(next == &it && mode == waiting_to_complete){
 
-			switch(actor.work.get().type){
+			switch(it.work.get().type){
 
 				case action::transition: {
-					pos += (actor.work.get().where - pos) * actor.work.percent();
-					pos.y -= 120 * std::sin(M_PI * actor.work.percent());
+					point position = it.work.get().where;
+
+					pos += (position - pos) * it.work.percent();
+					pos.y -= 120 * std::sin(M_PI * it.work.percent());
 					break;
 				}
 
 				case action::attack:{
-					point target = actor.work.get().target->position;
+					actor* target = it.work.get().target;
+					move* command = it.work.get().command;
 
-					pos.x -= 30 * std::cos(M_PI * 1.5 + M_PI * actor.work.percent());
+					int dmg = command->query_deal(statistics::HP, &it.status, &target->status);
+
+					pos.x -= 30 * std::cos(M_PI * 1.5 + M_PI * it.work.percent());
+
 					Game->draw_Text(
-						target.x, target.y - 50 * actor.work.percent(),
-						"-" + std::to_string(10),
+						target->position.x, target->position.y - 50 * it.work.percent(),
+						std::to_string(dmg),
 						"DotGothic16-Regular.ttf",
 						26
 						);
@@ -404,12 +428,12 @@ void battle::draw(game* Game){
 			0, 0,
 			32, 32,
 			2, 2,
-			actor.who->asset
+			it.who->asset
 			);
 
 		Game->draw_Text(
 			pos.x, pos.y + 64,
-			"Health" + std::to_string(actor.status.hp),
+			"Health " + std::to_string(it.status.hp),
 			"DotGothic16-Regular.ttf",
 			13
 			);

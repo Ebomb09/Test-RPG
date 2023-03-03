@@ -13,20 +13,20 @@ void messagebox::check(game* Game){
 
 	if(getvar("join_WizardCat") == 1){
 		assign("join_WizardCat", 0);
-		Game->Characters[game::characters::wizardcat].name = Game->load_InputBox("Name your character", Game->Characters[game::characters::wizardcat].name);
-		Game->load_PartyPosition(&Game->Characters[game::characters::wizardcat]);
+		Game->Characters[characters::wizardcat].name = Game->load_InputBox("Name your character", Game->Characters[characters::wizardcat].name);
+		Game->load_PartyPosition(&Game->Characters[characters::wizardcat]);
 	}
 
 	// Set the built-in variables
 
 	int size = 0;
 	int wizardcat = 0;
-	for(int i = 0; i < game::characters::maxpartysize; i ++){
+	for(int i = 0; i < characters::maxpartysize; i ++){
 
 		if(Game->Party[i])
 			size++;
 
-		if(Game->Party[i] == &Game->Characters[game::characters::wizardcat])
+		if(Game->Party[i] == &Game->Characters[characters::wizardcat])
 			wizardcat = 1;
 	}
 

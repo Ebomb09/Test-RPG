@@ -13,7 +13,7 @@ struct actor;
 
 struct action{
 
-	enum{
+	enum action_type{
 		none,
 		transition,
 		attack
@@ -24,8 +24,8 @@ struct action{
 	point where;
 
 	/* Attack */
-	actor* target;
-	move* command;
+	actor* target = NULL;
+	move* command = NULL;
 };
 
 struct actor{
@@ -43,7 +43,7 @@ struct actor{
 struct battle : interface{
 
 	struct cursor{
-		enum{
+		enum cursor_mode{
 			none,
 			select_attack,
 			select_target

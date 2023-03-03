@@ -17,6 +17,8 @@
 #include "character.h"
 #include "move.h"
 
+#include "gamedef.h"
+
 class game : public input, public video, public audio{
 
 	/* Game control declarations */
@@ -41,13 +43,6 @@ public:
 	~game();
 
 	/* Character / Party */
-	struct characters{
-		enum{
-			wizardcat,
-			total,
-			maxpartysize = 4
-		};
-	};
 	character Characters[characters::total];
 	character* Party[characters::maxpartysize];
 
@@ -55,28 +50,12 @@ public:
 	bool is_PartyMember(character* ch);
 
 	/* Enemies */
-	struct enemies{
-		enum{
-			slime,
-			total
-		};
-	};
 	character Enemies[enemies::total];
 
 	void load_Enemies();
 	bool is_Enemy(character* ch);
 
 	/* Movelist */
-	struct moves{
-		enum{
-			attack,
-			item,
-			fire,
-			thunder,
-			ice,
-			total
-		};
-	};
 	move Moves[moves::total];
 
 	void load_Moves();
