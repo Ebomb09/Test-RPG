@@ -38,6 +38,7 @@ bool video::create_Window(const char* name, int width, int height){
 		return false;
 
 	Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
 
 	return Renderer;
 }
