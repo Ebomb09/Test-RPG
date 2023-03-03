@@ -7,7 +7,7 @@ encounter::encounter(int x, int y){
 }
 
 void encounter::draw(game* Game, worldmap* World){
-
+	Game->draw_Colour(0, 0, 0, 255);
 	Game->draw_Rectangle(position.x * 64, position.y * 64, 64, 64);
 	Game->draw_Text(position.x * 64, position.y * 64, "encounter", "DotGothic16-Regular.ttf", 32);
 }

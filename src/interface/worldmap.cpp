@@ -77,10 +77,10 @@ bool worldmap::load_Map(std::string map){
 
 			if(name == "npc"){
 				int x, y;
-				std::string script;
+				std::string script, character;
 
-				if(file >> x >> y >> script)
-					entities.push_back(new npc(x, y, script));
+				if(file >> x >> y >> script >> character)
+					entities.push_back(new npc(x, y, script, character));
 			}
 
 			if(name == "encounter"){

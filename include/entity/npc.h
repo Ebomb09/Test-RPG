@@ -6,9 +6,9 @@
 
 struct npc : entity{
 
-	std::string script;
+	std::string script, character;
 
-	npc(int x, int y, std::string _script);
+	npc(int x, int y, std::string _script, std::string _character);
 
 	bool interact(game* Game, worldmap* World);
 	void draw(game* Game, worldmap* World);
